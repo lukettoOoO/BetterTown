@@ -3,6 +3,7 @@
  */
 
 package com.mycompany.bettertown;
+import com.mycompany.bettertown.login.LoginFrame;
 
 /**
  *
@@ -11,6 +12,7 @@ package com.mycompany.bettertown;
 public class BetterTown {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        LoginFrame loginObj = new LoginFrame();
+        loginObj.show();
     }
 }

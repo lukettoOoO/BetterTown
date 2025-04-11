@@ -16,6 +16,7 @@ public class MainTabsUser extends javax.swing.JFrame {
     public MainTabsUser() {
         initComponents();
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -33,7 +34,6 @@ public class MainTabsUser extends javax.swing.JFrame {
         feedbackButton = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         mapPanel = new javax.swing.JPanel();
-        mapLabel1 = new javax.swing.JLabel();
         feedPanel = new javax.swing.JPanel();
         feedLabel = new javax.swing.JLabel();
         alertsLabel = new javax.swing.JPanel();
@@ -97,24 +97,15 @@ public class MainTabsUser extends javax.swing.JFrame {
 
         jTabbedPane1.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
 
-        mapLabel1.setFont(new java.awt.Font("Helvetica Neue", 0, 48)); // NOI18N
-        mapLabel1.setText("Map:");
-
         javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
         mapPanel.setLayout(mapPanelLayout);
         mapPanelLayout.setHorizontalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mapPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(mapLabel1)
-                .addContainerGap(506, Short.MAX_VALUE))
+            .addGap(0, 621, Short.MAX_VALUE)
         );
         mapPanelLayout.setVerticalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mapPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(mapLabel1)
-                .addContainerGap(429, Short.MAX_VALUE))
+            .addGap(0, 493, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Map", mapPanel);
@@ -276,7 +267,6 @@ public class MainTabsUser extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton mapButton;
-    private javax.swing.JLabel mapLabel1;
     private javax.swing.JPanel mapPanel;
     // End of variables declaration//GEN-END:variables
 

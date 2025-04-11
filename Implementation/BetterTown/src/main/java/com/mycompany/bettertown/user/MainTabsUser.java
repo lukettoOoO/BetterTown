@@ -4,6 +4,19 @@
  */
 package com.mycompany.bettertown.user;
 
+import java.awt.BorderLayout;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
+import javax.swing.event.MouseInputListener;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.OSMTileFactoryInfo;
+import org.jxmapviewer.VirtualEarthTileFactoryInfo;
+import org.jxmapviewer.input.PanMouseInputListener;
+import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
+import org.jxmapviewer.viewer.DefaultTileFactory;
+import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.TileFactoryInfo;
+
 /**
  *
  * @author luca
@@ -13,10 +26,37 @@ public class MainTabsUser extends javax.swing.JFrame {
     /**
      * Creates new form MainTabs
      */
+    
+    private JXMapViewer mapViewer;
+    
     public MainTabsUser() {
         initComponents();
+        initMap();
     }
     
+    private void initMap()
+    {
+        //map init:
+        mapViewer = new JXMapViewer();
+        TileFactoryInfo info = new OSMTileFactoryInfo();
+        DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+        mapViewer.setTileFactory(tileFactory);
+        tileFactory.setThreadPoolSize(8);
+        GeoPosition timisoara = new GeoPosition(45.75, 21.23);
+        mapViewer.setZoom(7);
+        mapViewer.setAddressLocation(timisoara);
+        mapPanel.setLayout(new BorderLayout());
+        mapPanel.add(mapViewer, BorderLayout.CENTER);
+        mapPanel.setLayout(new java.awt.BorderLayout());
+        mapPanel.add(mapViewer, java.awt.BorderLayout.CENTER);
+        
+        //mouse move:
+        MouseInputListener mouseMove = new PanMouseInputListener(mapViewer);
+        mapViewer.addMouseListener(mouseMove);
+        mapViewer.addMouseMotionListener(mouseMove);
+        mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(mapViewer));
+        
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -34,6 +74,8 @@ public class MainTabsUser extends javax.swing.JFrame {
         feedbackButton = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         mapPanel = new javax.swing.JPanel();
+        mapInfoPanel = new javax.swing.JPanel();
+        comboMapType = new javax.swing.JComboBox<>();
         feedPanel = new javax.swing.JPanel();
         feedLabel = new javax.swing.JLabel();
         alertsLabel = new javax.swing.JPanel();
@@ -95,17 +137,51 @@ public class MainTabsUser extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jTabbedPane1.setBackground(new java.awt.Color(255, 255, 255));
         jTabbedPane1.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+
+        mapInfoPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout mapInfoPanelLayout = new javax.swing.GroupLayout(mapInfoPanel);
+        mapInfoPanel.setLayout(mapInfoPanelLayout);
+        mapInfoPanelLayout.setHorizontalGroup(
+            mapInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 272, Short.MAX_VALUE)
+        );
+        mapInfoPanelLayout.setVerticalGroup(
+            mapInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 179, Short.MAX_VALUE)
+        );
+
+        comboMapType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Open Street", "Virtual Earth", "Hybrid", "Satelite" }));
+        comboMapType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboMapTypeActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
         mapPanel.setLayout(mapPanelLayout);
         mapPanelLayout.setHorizontalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 621, Short.MAX_VALUE)
+            .addGroup(mapPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(mapInfoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 235, Short.MAX_VALUE)
+                .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
         );
         mapPanelLayout.setVerticalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 493, Short.MAX_VALUE)
+            .addGroup(mapPanelLayout.createSequentialGroup()
+                .addGroup(mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(mapPanelLayout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(mapInfoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(mapPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(300, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Map", mapPanel);
@@ -217,6 +293,28 @@ public class MainTabsUser extends javax.swing.JFrame {
         // TODO add your handling code here:
         jTabbedPane1.setSelectedIndex(3);
     }//GEN-LAST:event_feedbackButtonActionPerformed
+
+    private void comboMapTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMapTypeActionPerformed
+        // TODO add your handling code here:
+        TileFactoryInfo info;
+        int index = comboMapType.getSelectedIndex();
+        switch (index) {
+            case 0:
+                info = new OSMTileFactoryInfo();
+                break;
+            case 1:
+                info = new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.MAP);
+                break;
+            case 2:
+                info = new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.HYBRID);
+                break;
+            default:
+                info = new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.SATELLITE);
+                break;
+        }
+        DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+        mapViewer.setTileFactory(tileFactory);
+    }//GEN-LAST:event_comboMapTypeActionPerformed
     
     /**
      * @param args the command line arguments
@@ -258,6 +356,7 @@ public class MainTabsUser extends javax.swing.JFrame {
     private javax.swing.JButton alertsButton;
     private javax.swing.JPanel alertsLabel;
     private javax.swing.JLabel alertsLabel1;
+    private javax.swing.JComboBox<String> comboMapType;
     private javax.swing.JButton feedButton;
     private javax.swing.JLabel feedLabel;
     private javax.swing.JPanel feedPanel;
@@ -267,6 +366,7 @@ public class MainTabsUser extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton mapButton;
+    private javax.swing.JPanel mapInfoPanel;
     private javax.swing.JPanel mapPanel;
     // End of variables declaration//GEN-END:variables
 

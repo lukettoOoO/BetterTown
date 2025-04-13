@@ -26,7 +26,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPane" pref="635" max="32767" attributes="0"/>
+              <Component id="tabbedPane" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -56,11 +56,15 @@
               <Component id="mapButton" alignment="0" max="32767" attributes="0"/>
               <Component id="feedButton" alignment="0" max="32767" attributes="0"/>
               <Component id="alertsButton" alignment="0" max="32767" attributes="0"/>
-              <Component id="managerButton" alignment="0" max="32767" attributes="0"/>
-              <Group type="102" alignment="0" attributes="0">
+              <Component id="managerButton" alignment="0" pref="101" max="32767" attributes="0"/>
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="logoLabel" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="0" attributes="0">
+                  <Component id="logOutButton" min="-2" pref="76" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -75,6 +79,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="managerButton" min="-2" pref="63" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
+                  <Component id="logOutButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="logoLabel" min="-2" pref="67" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               </Group>
@@ -116,6 +122,14 @@
         </Component>
         <Component class="javax.swing.JLabel" name="logoLabel">
         </Component>
+        <Component class="javax.swing.JButton" name="logOutButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Log out"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="logOutButtonActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JTabbedPane" name="tabbedPane">
@@ -152,7 +166,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                       <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="202" max="32767" attributes="0"/>
+                      <EmptySpace pref="181" max="32767" attributes="0"/>
                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="comboMapType" min="-2" pref="93" max="-2" attributes="0"/>
@@ -254,13 +268,13 @@
                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jComboBox1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="23" pref="271" max="32767" attributes="0"/>
+                      <EmptySpace min="23" pref="250" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane1" pref="175" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" pref="154" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -498,7 +512,7 @@
                               <Component id="jButton4" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jButton5" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="461" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="440" max="32767" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
                       </Group>
@@ -655,7 +669,7 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="93" max="32767" attributes="0"/>
+                      <EmptySpace pref="72" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

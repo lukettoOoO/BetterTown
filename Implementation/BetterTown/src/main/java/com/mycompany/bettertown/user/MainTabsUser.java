@@ -4,6 +4,8 @@
  */
 package com.mycompany.bettertown.user;
 
+import com.mycompany.bettertown.login.LogoutConfirmationFrame;
+import com.mycompany.bettertown.login.LogoutListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.ImageIcon;
@@ -83,6 +85,7 @@ public class MainTabsUser extends javax.swing.JFrame {
         alertsButton = new javax.swing.JButton();
         feedbackButton = new javax.swing.JButton();
         logoLabel = new javax.swing.JLabel();
+        logOutButton = new javax.swing.JButton();
         tabbedPane = new javax.swing.JTabbedPane();
         mapPanel = new javax.swing.JPanel();
         comboMapType = new javax.swing.JComboBox<>();
@@ -159,6 +162,13 @@ public class MainTabsUser extends javax.swing.JFrame {
             }
         });
 
+        logOutButton.setText("Log out");
+        logOutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logOutButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -171,6 +181,9 @@ public class MainTabsUser extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(logOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -183,6 +196,8 @@ public class MainTabsUser extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(feedbackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logOutButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(logoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
         );
@@ -738,6 +753,16 @@ public class MainTabsUser extends javax.swing.JFrame {
         starButton5.setText("★");
         starButton5.setBackground(Color.yellow);
     }//GEN-LAST:event_starButton5ActionPerformed
+
+    private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
+        LogoutConfirmationFrame logoutObj = new LogoutConfirmationFrame(new LogoutListener() {
+            @Override
+            public void onLogoutConfirmed() {
+                dispose(); // Close the main frame
+            }
+        });
+        logoutObj.setVisible(true);
+    }//GEN-LAST:event_logOutButtonActionPerformed
     
     /**
      * @param args the command line arguments
@@ -813,6 +838,7 @@ public class MainTabsUser extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JButton logOutButton;
     private javax.swing.JLabel logoLabel;
     private javax.swing.JButton mapButton;
     private javax.swing.JPanel mapPanel;

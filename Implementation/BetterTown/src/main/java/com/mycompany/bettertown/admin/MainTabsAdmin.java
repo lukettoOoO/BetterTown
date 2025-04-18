@@ -99,13 +99,33 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jSeparator1 = new javax.swing.JSeparator();
-        jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
         viewButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
+        issueViewPanel = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        titleLabel = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        descriptionTextArea = new javax.swing.JTextArea();
+        jLabel15 = new javax.swing.JLabel();
+        photoLabel = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTextPane1 = new javax.swing.JTextPane();
+        jLabel18 = new javax.swing.JLabel();
+        titleLabel1 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
         alertsLabel = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -277,20 +297,6 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         jSeparator1.setBackground(new java.awt.Color(204, 255, 255));
         jSeparator1.setForeground(new java.awt.Color(51, 204, 255));
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 204, 255), 1, true), "Issue View", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font(".AppleSystemUIFont", 0, 18), new java.awt.Color(0, 204, 255))); // NOI18N
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 416, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 388, Short.MAX_VALUE)
-        );
-
         jList1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 204, 255), 1, true), "Issue List", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font(".AppleSystemUIFont", 0, 18), new java.awt.Color(51, 204, 255))); // NOI18N
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "6", "7", "3", "2", "3", "4", "5", "32", "2", "1", "1", "34", " " };
@@ -317,6 +323,172 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         jButton7.setText("Delete");
 
         jButton8.setText("Update");
+
+        issueViewPanel.setBackground(new java.awt.Color(255, 255, 255));
+        issueViewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 204, 255), 1, true), "Issue View", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font(".AppleSystemUIFont", 0, 18), new java.awt.Color(0, 204, 255))); // NOI18N
+
+        jLabel11.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 14)); // NOI18N
+        jLabel11.setText("Title:");
+
+        titleLabel.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 12)); // NOI18N
+        titleLabel.setText("Issue Title");
+
+        jLabel13.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 14)); // NOI18N
+        jLabel13.setText("Description:");
+        jLabel13.setToolTipText("");
+
+        descriptionTextArea.setEditable(false);
+        descriptionTextArea.setBackground(new java.awt.Color(255, 255, 255));
+        descriptionTextArea.setColumns(20);
+        descriptionTextArea.setFont(new java.awt.Font("Apple SD Gothic Neo", 0, 12)); // NOI18N
+        descriptionTextArea.setRows(5);
+        jScrollPane4.setViewportView(descriptionTextArea);
+
+        jLabel15.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 14)); // NOI18N
+        jLabel15.setText("Photo:");
+        jLabel15.setToolTipText("");
+
+        photoLabel.setBackground(new java.awt.Color(204, 204, 204));
+        photoLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                photoLabelMouseClicked(evt);
+            }
+        });
+
+        jLabel12.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 14)); // NOI18N
+        jLabel12.setText("City:");
+
+        jLabel16.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 12)); // NOI18N
+        jLabel16.setText("City Name");
+
+        jLabel17.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 14)); // NOI18N
+        jLabel17.setText("Address:");
+
+        jTextPane1.setEditable(false);
+        jTextPane1.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
+        jScrollPane5.setViewportView(jTextPane1);
+
+        jLabel18.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 14)); // NOI18N
+        jLabel18.setText("Priority:");
+
+        titleLabel1.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 12)); // NOI18N
+        titleLabel1.setText("0");
+
+        jLabel20.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 14)); // NOI18N
+        jLabel20.setText("Reported by:");
+
+        jLabel21.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 14)); // NOI18N
+        jLabel21.setText("Date:");
+
+        jLabel22.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 12)); // NOI18N
+        jLabel22.setText("User Name");
+
+        jLabel23.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 12)); // NOI18N
+        jLabel23.setText("Date");
+
+        jLabel24.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 14)); // NOI18N
+        jLabel24.setText("Status:");
+
+        jLabel25.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 12)); // NOI18N
+        jLabel25.setText("Status");
+
+        javax.swing.GroupLayout issueViewPanelLayout = new javax.swing.GroupLayout(issueViewPanel);
+        issueViewPanel.setLayout(issueViewPanelLayout);
+        issueViewPanelLayout.setHorizontalGroup(
+            issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(issueViewPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(issueViewPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane4))
+                    .addGroup(issueViewPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(photoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(issueViewPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel12)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel16)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(issueViewPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel17)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))))
+                    .addGroup(issueViewPanelLayout.createSequentialGroup()
+                        .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(issueViewPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(titleLabel))
+                            .addGroup(issueViewPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(titleLabel1))
+                            .addGroup(issueViewPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel21)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel23))
+                            .addGroup(issueViewPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel20)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel22))
+                            .addGroup(issueViewPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel24)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel25)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        issueViewPanelLayout.setVerticalGroup(
+            issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(issueViewPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(titleLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel13)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
+                .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(issueViewPanelLayout.createSequentialGroup()
+                        .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel15)
+                            .addGroup(issueViewPanelLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel12)
+                                    .addComponent(jLabel16))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel17)
+                                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(34, 34, 34))
+                    .addGroup(issueViewPanelLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(photoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel18)
+                    .addComponent(titleLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel20)
+                    .addComponent(jLabel22))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel21)
+                    .addComponent(jLabel23))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel24)
+                    .addComponent(jLabel25))
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout feedPanelLayout = new javax.swing.GroupLayout(feedPanel);
         feedPanel.setLayout(feedPanelLayout);
@@ -346,7 +518,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                             .addComponent(jButton7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(issueViewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(16, 16, 16))
         );
         feedPanelLayout.setVerticalGroup(
@@ -361,18 +533,18 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(feedPanelLayout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(124, 124, 124)
                         .addComponent(viewButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
+                        .addComponent(jButton1))
+                    .addComponent(issueViewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(35, 35, 35))
         );
 
@@ -613,6 +785,11 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         });
         logoutObj.setVisible(true);
     }//GEN-LAST:event_logOutButtonActionPerformed
+
+    private void photoLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_photoLabelMouseClicked
+        PhotoView photoViewObj = new PhotoView();
+        photoViewObj.show();
+    }//GEN-LAST:event_photoLabelMouseClicked
     
     /**
      * @param args the command line arguments
@@ -656,9 +833,11 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private javax.swing.JButton alertsButton;
     private javax.swing.JPanel alertsLabel;
     private javax.swing.JComboBox<String> comboMapType;
+    private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JButton feedButton;
     private javax.swing.JPanel feedPanel;
     private javax.swing.JPanel feedbackLabel;
+    private javax.swing.JPanel issueViewPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
@@ -672,7 +851,20 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -682,21 +874,26 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private javax.swing.JList<String> jList2;
     private javax.swing.JList<String> jList3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JButton logOutButton;
     private javax.swing.JLabel logoLabel;
     private javax.swing.JButton managerButton;
     private javax.swing.JButton mapButton;
     private javax.swing.JPanel mapPanel;
     private javax.swing.JPanel mapPanelSecondary;
+    private javax.swing.JLabel photoLabel;
     private javax.swing.JTabbedPane tabbedPane;
+    private javax.swing.JLabel titleLabel;
+    private javax.swing.JLabel titleLabel1;
     private javax.swing.JButton viewButton;
     // End of variables declaration//GEN-END:variables
 

@@ -40,8 +40,10 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         
         this.logoIcon = new ImageIcon("logo.png");
         logoLabel.setIcon(logoIcon);
+        setLocationRelativeTo(null);
         
         initMap();
+        initButtons();
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -69,6 +71,21 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         mapViewer.addMouseMotionListener(mouseMove);
         mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(mapViewer));
         
+    }
+    
+    private void initButtons()
+    {
+        ImageIcon mapIcon = new ImageIcon("map.png");
+        mapButton.setIcon(mapIcon);
+        
+        ImageIcon feedIcon = new ImageIcon("feed.png");
+        feedButton.setIcon(feedIcon);
+        
+        ImageIcon alertsIcon = new ImageIcon("alerts.png");
+        alertsButton.setIcon(alertsIcon);
+        
+        ImageIcon managerIcon = new ImageIcon("manager.png");
+        managerButton.setIcon(managerIcon);
     }
 
     /**
@@ -150,28 +167,24 @@ public class MainTabsAdmin extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(64, 64, 64));
 
-        mapButton.setText("Map");
         mapButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mapButtonActionPerformed(evt);
             }
         });
 
-        feedButton.setText("Feed");
         feedButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 feedButtonActionPerformed(evt);
             }
         });
 
-        alertsButton.setText("Alerts");
         alertsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 alertsButtonActionPerformed(evt);
             }
         });
 
-        managerButton.setText("Manager");
         managerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 managerButtonActionPerformed(evt);
@@ -533,19 +546,21 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(feedPanelLayout.createSequentialGroup()
+                        .addComponent(issueViewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35))
                     .addGroup(feedPanelLayout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton7)
-                        .addGap(124, 124, 124)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(viewButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
-                    .addComponent(issueViewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35))
+                        .addComponent(jButton1)
+                        .addGap(47, 47, 47))))
         );
 
         tabbedPane.addTab("Feed", feedPanel);

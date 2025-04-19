@@ -39,10 +39,13 @@ public class MainTabsUser extends javax.swing.JFrame {
         
         this.logoIcon = new ImageIcon("logo.png");
         logoLabel.setIcon(logoIcon);
+        setLocationRelativeTo(null);
         
         initMap();
+        initButtons();
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
         
     }
     
@@ -68,6 +71,21 @@ public class MainTabsUser extends javax.swing.JFrame {
         mapViewer.addMouseMotionListener(mouseMove);
         mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(mapViewer));
         
+    }
+    
+    private void initButtons()
+    {
+        ImageIcon mapIcon = new ImageIcon("map.png");
+        mapButton.setIcon(mapIcon);
+        
+        ImageIcon feedIcon = new ImageIcon("feed.png");
+        feedButton.setIcon(feedIcon);
+        
+        ImageIcon alertsIcon = new ImageIcon("alerts.png");
+        alertsButton.setIcon(alertsIcon);
+        
+        ImageIcon feedbackIcon = new ImageIcon("feedback.png");
+        feedbackButton.setIcon(feedbackIcon);
     }
 
     /**
@@ -160,28 +178,24 @@ public class MainTabsUser extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(64, 64, 64));
 
-        mapButton.setText("Map");
         mapButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mapButtonActionPerformed(evt);
             }
         });
 
-        feedButton.setText("Feed");
         feedButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 feedButtonActionPerformed(evt);
             }
         });
 
-        alertsButton.setText("Alerts");
         alertsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 alertsButtonActionPerformed(evt);
             }
         });
 
-        feedbackButton.setText("Feedback");
         feedbackButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 feedbackButtonActionPerformed(evt);
@@ -267,7 +281,7 @@ public class MainTabsUser extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mapPanelLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 246, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 266, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
                 .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -442,9 +456,7 @@ public class MainTabsUser extends javax.swing.JFrame {
                     .addComponent(titleLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(issueViewPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel13)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
                 .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(issueViewPanelLayout.createSequentialGroup()
@@ -541,7 +553,7 @@ public class MainTabsUser extends javax.swing.JFrame {
                 .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, feedPanelLayout.createSequentialGroup()
-                        .addGap(0, 44, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(feedPanelLayout.createSequentialGroup()
                                 .addComponent(jButton2)
@@ -613,7 +625,7 @@ public class MainTabsUser extends javax.swing.JFrame {
                         .addComponent(jButton4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton5)
-                        .addGap(0, 453, Short.MAX_VALUE))
+                        .addGap(0, 473, Short.MAX_VALUE))
                     .addComponent(jScrollPane2))
                 .addContainerGap())
         );
@@ -723,12 +735,12 @@ public class MainTabsUser extends javax.swing.JFrame {
                                 .addComponent(starButton4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(starButton5)))))
-                .addContainerGap(74, Short.MAX_VALUE))
+                .addContainerGap(94, Short.MAX_VALUE))
             .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(feedbackLabelLayout.createSequentialGroup()
                     .addGap(185, 185, 185)
                     .addComponent(jButton12)
-                    .addContainerGap(419, Short.MAX_VALUE)))
+                    .addContainerGap(439, Short.MAX_VALUE)))
         );
         feedbackLabelLayout.setVerticalGroup(
             feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

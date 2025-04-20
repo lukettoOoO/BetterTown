@@ -168,7 +168,6 @@ public class MainTabsUser extends javax.swing.JFrame {
         starButton3 = new javax.swing.JButton();
         starButton4 = new javax.swing.JButton();
         starButton5 = new javax.swing.JButton();
-        jButton12 = new javax.swing.JButton();
 
         jLabel14.setText("jLabel14");
 
@@ -633,12 +632,12 @@ public class MainTabsUser extends javax.swing.JFrame {
             alertsLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(alertsLabelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(alertsLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
-                .addContainerGap(9, Short.MAX_VALUE))
+                .addGroup(alertsLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton5)
+                    .addComponent(jButton4))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Alerts", alertsLabel);
@@ -701,8 +700,6 @@ public class MainTabsUser extends javax.swing.JFrame {
             }
         });
 
-        jButton12.setText("☆");
-
         javax.swing.GroupLayout feedbackLabelLayout = new javax.swing.GroupLayout(feedbackLabel);
         feedbackLabel.setLayout(feedbackLabelLayout);
         feedbackLabelLayout.setHorizontalGroup(
@@ -736,11 +733,6 @@ public class MainTabsUser extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(starButton5)))))
                 .addContainerGap(94, Short.MAX_VALUE))
-            .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(feedbackLabelLayout.createSequentialGroup()
-                    .addGap(185, 185, 185)
-                    .addComponent(jButton12)
-                    .addContainerGap(439, Short.MAX_VALUE)))
         );
         feedbackLabelLayout.setVerticalGroup(
             feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -769,11 +761,6 @@ public class MainTabsUser extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton6)
                 .addContainerGap(129, Short.MAX_VALUE))
-            .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(feedbackLabelLayout.createSequentialGroup()
-                    .addGap(138, 138, 138)
-                    .addComponent(jButton12)
-                    .addContainerGap(332, Short.MAX_VALUE)))
         );
 
         tabbedPane.addTab("Feedback", feedbackLabel);
@@ -1008,7 +995,6 @@ public class MainTabsUser extends javax.swing.JFrame {
     private javax.swing.JPanel feedbackLabel;
     private javax.swing.JPanel issueViewPanel;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;

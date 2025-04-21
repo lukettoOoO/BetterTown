@@ -4,8 +4,12 @@
  */
 package com.mycompany.bettertown.user;
 
+import com.mycompany.bettertown.IssueData;
 import com.mycompany.bettertown.login.LogoutConfirmationFrame;
 import com.mycompany.bettertown.login.LogoutListener;
+import com.mycompany.bettertown.map.EventWaypoint;
+import com.mycompany.bettertown.map.MyWaypoint;
+import com.mycompany.bettertown.map.WaypointRender;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.ImageIcon;
@@ -20,6 +24,13 @@ import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import org.jxmapviewer.viewer.WaypointPainter;
 
 /**
  *
@@ -33,6 +44,11 @@ public class MainTabsUser extends javax.swing.JFrame {
     
     private JXMapViewer mapViewer;
     private final ImageIcon logoIcon;
+    private double currentLatitude;
+    private double currentLongitude;
+    private final Set<MyWaypoint> waypoints = new HashSet<>();
+    private ArrayList<IssueData> issueDataList = new ArrayList<IssueData>(); //this list and its contents has to be exported and imported from and to database
+    private EventWaypoint event;
     
     public MainTabsUser() {
         initComponents();
@@ -71,6 +87,81 @@ public class MainTabsUser extends javax.swing.JFrame {
         mapViewer.addMouseMotionListener(mouseMove);
         mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(mapViewer));
         
+        //mouse listener for getting coordinates and adding a waypoint:
+        mapViewer.addMouseListener(new MouseAdapter(){
+         @Override
+         public void mouseClicked(MouseEvent e) {
+            if(e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1){
+                java.awt.Point p = e.getPoint();
+                GeoPosition geo = mapViewer.convertPointToGeoPosition(p);
+                currentLatitude = geo.getLatitude();
+                currentLongitude = geo.getLongitude();
+                System.out.println("X:" + currentLatitude + ",Y:" + currentLongitude);
+                
+                 //SHOW ADD ISSUE WINDOW HERE and create a new IssueData instance that will be added to the issue list (get the data from the form window):
+                IssueData currentIssue = new IssueData("title", "description", "photo address", 0, "city", "address", new Date(), "username", "status", currentLatitude, currentLongitude);
+                issueDataList.add(currentIssue);
+                addWaypoint(new MyWaypoint(currentIssue, event, new GeoPosition(currentLatitude, currentLongitude)));
+                initWaypoint();
+            } 
+        }
+        });
+        
+        event = getEvent();
+        
+    }
+    
+    private void initWaypoint()
+    {
+        WaypointPainter<MyWaypoint> wp = new WaypointRender();
+        wp.setWaypoints(waypoints);
+        mapViewer.setOverlayPainter(wp);
+        for(MyWaypoint d : waypoints)
+        {
+            mapViewer.add(d.getButton());
+        }
+    }
+    
+    private void addWaypoint(MyWaypoint waypoint)
+    {
+        for(MyWaypoint d : waypoints)
+        {
+            mapViewer.remove(d.getButton());
+        }
+        waypoints.add(waypoint);
+        initWaypoint();
+    }
+    
+    
+    public void clearWaypoint()
+    {
+        for(MyWaypoint d : waypoints)
+        {
+            mapViewer.remove(d.getButton());
+        }
+        waypoints.clear();
+        initWaypoint();
+    }
+    
+    private EventWaypoint getEvent()
+    {
+        return new EventWaypoint()
+        {
+            public void selected(MyWaypoint waypoint)
+            {
+                tabbedPane.setSelectedIndex(1);
+            }
+        };
+    }
+    
+    private double getCurrentLatitude()
+    {
+        return currentLatitude;
+    }
+    
+    private double getCurrentLongitude()
+    {
+        return currentLongitude;
     }
     
     private void initButtons()
@@ -250,6 +341,13 @@ public class MainTabsUser extends javax.swing.JFrame {
         comboMapType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboMapTypeActionPerformed(evt);
+            }
+        });
+
+        mapPanelSecondary.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        mapPanelSecondary.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mapPanelSecondaryMouseClicked(evt);
             }
         });
 
@@ -947,6 +1045,10 @@ public class MainTabsUser extends javax.swing.JFrame {
        PhotoView photoViewObj = new PhotoView();
        photoViewObj.show();
     }//GEN-LAST:event_photoLabelMouseClicked
+
+    private void mapPanelSecondaryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapPanelSecondaryMouseClicked
+  
+    }//GEN-LAST:event_mapPanelSecondaryMouseClicked
     
     /**
      * @param args the command line arguments

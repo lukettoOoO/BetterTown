@@ -4,11 +4,21 @@
  */
 package com.mycompany.bettertown.admin;
 
+import com.mycompany.bettertown.IssueData;
 import com.mycompany.bettertown.login.LogoutConfirmationFrame;
 import com.mycompany.bettertown.login.LogoutListener;
+import com.mycompany.bettertown.map.EventWaypoint;
+import com.mycompany.bettertown.map.MyWaypoint;
+import com.mycompany.bettertown.map.WaypointRender;
 import com.mycompany.bettertown.user.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -21,6 +31,7 @@ import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
+import org.jxmapviewer.viewer.WaypointPainter;
 
 /**
  *
@@ -34,6 +45,11 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     
     private JXMapViewer mapViewer;
     private final ImageIcon logoIcon;
+    private double currentLatitude;
+    private double currentLongitude;
+    private final Set<MyWaypoint> waypoints = new HashSet<>();
+    private ArrayList<IssueData> issueDataList = new ArrayList<IssueData>();
+    private EventWaypoint event;
     
     public MainTabsAdmin() {
         initComponents();
@@ -71,6 +87,79 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         mapViewer.addMouseMotionListener(mouseMove);
         mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(mapViewer));
         
+        //mouse listener for getting coordinates and adding a waypoint:
+        mapViewer.addMouseListener(new MouseAdapter(){
+         @Override
+         public void mouseClicked(MouseEvent e) {
+            if(e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1){
+                java.awt.Point p = e.getPoint();
+                GeoPosition geo = mapViewer.convertPointToGeoPosition(p);
+                currentLatitude = geo.getLatitude();
+                currentLongitude = geo.getLongitude();
+                System.out.println("X:" + currentLatitude + ",Y:" + currentLongitude);
+                
+                 //SHOW ADD ISSUE WINDOW HERE and create a new IssueData instance that will be added to the issue list (get the data from the form window):
+                IssueData currentIssue = new IssueData("title", "description", "photo address", 0, "city", "address", new Date(), "username", "status", currentLatitude, currentLongitude);
+                issueDataList.add(currentIssue);
+                addWaypoint(new MyWaypoint(currentIssue, event, new GeoPosition(currentLatitude, currentLongitude)));
+                initWaypoint();
+            } 
+        }
+        }); 
+        
+        event = getEvent();
+    }
+    
+    private void initWaypoint()
+    {
+        WaypointPainter<MyWaypoint> wp = new WaypointRender();
+        wp.setWaypoints(waypoints);
+        mapViewer.setOverlayPainter(wp);
+        for(MyWaypoint d : waypoints)
+        {
+            mapViewer.add(d.getButton());
+        }
+    }
+    
+    public void clearWaypoint()
+    {
+        for(MyWaypoint d : waypoints)
+        {
+            mapViewer.remove(d.getButton());
+        }
+        waypoints.clear();
+        initWaypoint();
+    }
+    
+     private EventWaypoint getEvent()
+    {
+        return new EventWaypoint()
+        {
+            public void selected(MyWaypoint waypoint)
+            {
+                tabbedPane.setSelectedIndex(1);
+            }
+        };
+    }
+    
+    private void addWaypoint(MyWaypoint waypoint)
+    {
+        for(MyWaypoint d : waypoints)
+        {
+            mapViewer.remove(d.getButton());
+        }
+        waypoints.add(waypoint);
+        initWaypoint();
+    }
+    
+    private double getCurrentLatitude()
+    {
+        return currentLatitude;
+    }
+    
+    private double getCurrentLongitude()
+    {
+        return currentLongitude;
     }
     
     private void initButtons()
@@ -107,9 +196,9 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         tabbedPane = new javax.swing.JTabbedPane();
         mapPanel = new javax.swing.JPanel();
         comboMapType = new javax.swing.JComboBox<>();
-        mapPanelSecondary = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        mapPanelSecondary = new javax.swing.JPanel();
         feedPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -143,6 +232,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
+        deleteAllButton = new javax.swing.JButton();
         alertsLabel = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -243,6 +333,19 @@ public class MainTabsAdmin extends javax.swing.JFrame {
             }
         });
 
+        jLabel4.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
+        jLabel4.setText("Map view:");
+
+        jLabel5.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
+        jLabel5.setText("Update reported issues on map:");
+
+        mapPanelSecondary.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        mapPanelSecondary.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mapPanelSecondaryMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout mapPanelSecondaryLayout = new javax.swing.GroupLayout(mapPanelSecondary);
         mapPanelSecondary.setLayout(mapPanelSecondaryLayout);
         mapPanelSecondaryLayout.setHorizontalGroup(
@@ -254,19 +357,10 @@ public class MainTabsAdmin extends javax.swing.JFrame {
             .addGap(0, 448, Short.MAX_VALUE)
         );
 
-        jLabel4.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
-        jLabel4.setText("Map view:");
-
-        jLabel5.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
-        jLabel5.setText("Update reported issues on map:");
-
         javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
         mapPanel.setLayout(mapPanelLayout);
         mapPanelLayout.setHorizontalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mapPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(mapPanelSecondary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mapPanelLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jLabel5)
@@ -275,6 +369,10 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32))
+            .addGroup(mapPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(mapPanelSecondary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         mapPanelLayout.setVerticalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -284,9 +382,9 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                     .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5))
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(mapPanelSecondary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(10, 10, 10))
         );
 
         tabbedPane.addTab("Map", mapPanel);
@@ -503,6 +601,13 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        deleteAllButton.setText("Delete All <Test>");
+        deleteAllButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteAllButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout feedPanelLayout = new javax.swing.GroupLayout(feedPanel);
         feedPanel.setLayout(feedPanelLayout);
         feedPanelLayout.setHorizontalGroup(
@@ -529,7 +634,8 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                                 .addComponent(viewButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton1))
                             .addComponent(jButton7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jButton8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(deleteAllButton, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(issueViewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(16, 16, 16))
@@ -556,6 +662,8 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                         .addComponent(jButton8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteAllButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(viewButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -805,6 +913,15 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         PhotoView photoViewObj = new PhotoView();
         photoViewObj.show();
     }//GEN-LAST:event_photoLabelMouseClicked
+
+    private void mapPanelSecondaryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapPanelSecondaryMouseClicked
+
+    }//GEN-LAST:event_mapPanelSecondaryMouseClicked
+
+    private void deleteAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAllButtonActionPerformed
+        // TODO add your handling code here:
+        clearWaypoint();
+    }//GEN-LAST:event_deleteAllButtonActionPerformed
     
     /**
      * @param args the command line arguments
@@ -848,6 +965,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private javax.swing.JButton alertsButton;
     private javax.swing.JPanel alertsLabel;
     private javax.swing.JComboBox<String> comboMapType;
+    private javax.swing.JButton deleteAllButton;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JButton feedButton;
     private javax.swing.JPanel feedPanel;

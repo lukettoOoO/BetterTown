@@ -73,6 +73,7 @@ public class CommentAdminFrame extends javax.swing.JFrame {
 
         jSeparator1.setForeground(new java.awt.Color(0, 204, 255));
 
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane3.setViewportView(jTextArea1);

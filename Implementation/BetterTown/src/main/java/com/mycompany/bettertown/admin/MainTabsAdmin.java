@@ -4,9 +4,11 @@
  */
 package com.mycompany.bettertown.admin;
 
+import com.github.kevinsawicki.http.HttpRequest;
 import com.mycompany.bettertown.IssueData;
 import com.mycompany.bettertown.login.LogoutConfirmationFrame;
 import com.mycompany.bettertown.login.LogoutListener;
+import com.mycompany.bettertown.login.ProfileData;
 import com.mycompany.bettertown.map.EventWaypoint;
 import com.mycompany.bettertown.map.MyWaypoint;
 import com.mycompany.bettertown.map.WaypointRender;
@@ -23,6 +25,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import javax.swing.event.MouseInputListener;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.VirtualEarthTileFactoryInfo;
@@ -50,6 +54,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private final Set<MyWaypoint> waypoints = new HashSet<>();
     private ArrayList<IssueData> issueDataList = new ArrayList<IssueData>();
     private EventWaypoint event;
+    private ProfileData currentAdminData;
     
     public MainTabsAdmin() {
         initComponents();
@@ -62,6 +67,8 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         initButtons();
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        //to be implemented: get profile data from login form
         
     }
     
@@ -98,11 +105,26 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                 currentLongitude = geo.getLongitude();
                 System.out.println("X:" + currentLatitude + ",Y:" + currentLongitude);
                 
-                 //SHOW ADD ISSUE WINDOW HERE and create a new IssueData instance that will be added to the issue list (get the data from the form window):
-                IssueData currentIssue = new IssueData("title", "description", "photo address", 0, "city", "address", new Date(), "username", "status", currentLatitude, currentLongitude);
-                issueDataList.add(currentIssue);
-                addWaypoint(new MyWaypoint(currentIssue, event, new GeoPosition(currentLatitude, currentLongitude)));
-                initWaypoint();
+                showLocation(geo); //API for location
+                AddIssue addIssueForm = new AddIssue(new AddIssueListener() {
+                    @Override
+                    public void onIssueAdded(IssueData issueData) {
+                        // Set the correct latitude and longitude
+                        issueData.setLatitude(currentLatitude);
+                        issueData.setLongitude(currentLongitude);
+
+                        // Add to the issue list
+                        issueDataList.add(issueData);
+
+                        // Add a waypoint to the map
+                        addWaypoint(new MyWaypoint(issueData, event, new GeoPosition(currentLatitude, currentLongitude)));
+                        initWaypoint();
+                    }
+               });
+                addIssueForm.setCity(getCity(geo));
+                addIssueForm.setAddress(getLocation(geo));
+                addIssueForm.setUserName(currentAdminData.getName());
+                addIssueForm.show();
             } 
         }
         }); 
@@ -141,7 +163,8 @@ public class MainTabsAdmin extends javax.swing.JFrame {
             }
         };
     }
-    
+    //admins shold NOT be able to add waypoints, only EDIT them
+     //this method is for testing puroposes only
     private void addWaypoint(MyWaypoint waypoint)
     {
         for(MyWaypoint d : waypoints)
@@ -160,6 +183,48 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private double getCurrentLongitude()
     {
         return currentLongitude;
+    }
+    
+    private void showLocation(GeoPosition geo)
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    System.out.println(getLocation(geo));
+                    System.out.println(getCity(geo));
+                } catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+    
+    public String getLocation(GeoPosition pos) throws JSONException
+    {
+        String body = HttpRequest.get("https://nominatim.openstreetmap.org/reverse?lat=" + pos.getLatitude() + "&lon=" + pos.getLongitude() + "&format=json").body();
+        JSONObject json = new JSONObject(body);
+        return json.getString("display_name");
+    }
+    
+  public String getCity(GeoPosition pos) throws JSONException 
+  {
+    String body = HttpRequest.get("https://nominatim.openstreetmap.org/reverse?lat=" + pos.getLatitude() + "&lon=" + pos.getLongitude() + "&format=json").body();
+    JSONObject json = new JSONObject(body);
+    JSONObject address = json.getJSONObject("address");
+    String city = address.optString("city"); // Use optString to handle cases where "city" might be missing
+    if (city == null || city.isEmpty()) {
+        city = address.optString("village"); // Try to get village if city is not found
+    }
+    return city;
+}
+  
+    public void setCurrentAdminData(ProfileData profileData)
+    {
+        this.currentAdminData = profileData;
     }
     
     private void initButtons()

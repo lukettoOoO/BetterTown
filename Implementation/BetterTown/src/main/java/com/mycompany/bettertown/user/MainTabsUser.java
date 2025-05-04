@@ -4,9 +4,12 @@
  */
 package com.mycompany.bettertown.user;
 
+import com.github.kevinsawicki.http.HttpRequest;
 import com.mycompany.bettertown.IssueData;
+import com.mycompany.bettertown.login.LoginFrame;
 import com.mycompany.bettertown.login.LogoutConfirmationFrame;
 import com.mycompany.bettertown.login.LogoutListener;
+import com.mycompany.bettertown.login.ProfileData;
 import com.mycompany.bettertown.map.EventWaypoint;
 import com.mycompany.bettertown.map.MyWaypoint;
 import com.mycompany.bettertown.map.WaypointRender;
@@ -30,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jxmapviewer.viewer.WaypointPainter;
 
 /**
@@ -49,6 +54,7 @@ public class MainTabsUser extends javax.swing.JFrame {
     private final Set<MyWaypoint> waypoints = new HashSet<>();
     private ArrayList<IssueData> issueDataList = new ArrayList<IssueData>(); //this list and its contents has to be exported and imported from and to database
     private EventWaypoint event;
+    private ProfileData currentUserData;
     
     public MainTabsUser() {
         initComponents();
@@ -62,7 +68,7 @@ public class MainTabsUser extends javax.swing.JFrame {
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        
+        //to be implemented: get profile data from login form
     }
     
     private void initMap()
@@ -87,7 +93,7 @@ public class MainTabsUser extends javax.swing.JFrame {
         mapViewer.addMouseMotionListener(mouseMove);
         mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(mapViewer));
         
-        //mouse listener for getting coordinates and adding a waypoint:
+        //mouse listener for getting coordinates/ location from API and adding a waypoint:
         mapViewer.addMouseListener(new MouseAdapter(){
          @Override
          public void mouseClicked(MouseEvent e) {
@@ -98,11 +104,27 @@ public class MainTabsUser extends javax.swing.JFrame {
                 currentLongitude = geo.getLongitude();
                 System.out.println("X:" + currentLatitude + ",Y:" + currentLongitude);
                 
-                 //SHOW ADD ISSUE WINDOW HERE and create a new IssueData instance that will be added to the issue list (get the data from the form window):
-                IssueData currentIssue = new IssueData("title", "description", "photo address", 0, "city", "address", new Date(), "username", "status", currentLatitude, currentLongitude);
-                issueDataList.add(currentIssue);
-                addWaypoint(new MyWaypoint(currentIssue, event, new GeoPosition(currentLatitude, currentLongitude)));
-                initWaypoint();
+                showLocation(geo); //API for location
+                AddIssue addIssueForm = new AddIssue(new AddIssueListener() {
+                    @Override
+                    public void onIssueAdded(IssueData issueData) {
+                        //set the correct latitude and longitude
+                        issueData.setLatitude(currentLatitude);
+                        issueData.setLongitude(currentLongitude);
+
+                        //add to the list
+                        issueDataList.add(issueData);
+                        printCurrentIssues();
+
+                        //add a waypoint on the map
+                        addWaypoint(new MyWaypoint(issueData, event, new GeoPosition(currentLatitude, currentLongitude)));
+                        initWaypoint();
+                    }
+                });
+                addIssueForm.setCity(getCity(geo));
+                addIssueForm.setAddress(getLocation(geo));
+                addIssueForm.setUserName(currentUserData.getName());
+                addIssueForm.show();
             } 
         }
         });
@@ -162,6 +184,73 @@ public class MainTabsUser extends javax.swing.JFrame {
     private double getCurrentLongitude()
     {
         return currentLongitude;
+    }
+    
+    private void showLocation(GeoPosition geo)
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    System.out.println(getLocation(geo));
+                    System.out.println(getCity(geo));
+                } catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+    
+    public String getLocation(GeoPosition pos) throws JSONException
+    {
+        String body = HttpRequest.get("https://nominatim.openstreetmap.org/reverse?lat=" + pos.getLatitude() + "&lon=" + pos.getLongitude() + "&format=json").body();
+        JSONObject json = new JSONObject(body);
+        return json.getString("display_name");
+    }
+    
+  public String getCity(GeoPosition pos) throws JSONException 
+  {
+    String body = HttpRequest.get("https://nominatim.openstreetmap.org/reverse?lat=" + pos.getLatitude() + "&lon=" + pos.getLongitude() + "&format=json").body();
+    JSONObject json = new JSONObject(body);
+    JSONObject address = json.getJSONObject("address");
+    String city = address.optString("city"); // Use optString to handle cases where "city" might be missing
+    if (city == null || city.isEmpty()) {
+        city = address.optString("village"); // Try to get village if city is not found
+    }
+    return city;
+}
+  
+    public void setCurrentUserData(ProfileData profileData)
+    {
+        this.currentUserData = profileData;
+    }
+    
+    private void printCurrentIssues()
+    {
+        if (issueDataList.isEmpty()) 
+        {
+        System.out.println("No issues to display.");
+        return;
+        }
+        System.out.println("CURRENT ISSUES:");
+        for (IssueData issue : issueDataList) 
+        {
+            System.out.println("Title: " + issue.getTitle());
+            System.out.println("Description: " + issue.getDescription());
+            System.out.println("City: " + issue.getCity());
+            System.out.println("Address: " + issue.getAddress());
+            System.out.println("User Name: " + issue.getUsername());
+            System.out.println("Status: " + issue.getStatus());
+            System.out.println("Priority: " + issue.getPriority());
+            System.out.println("Photo Path: " + issue.getPhoto());
+            System.out.println("Date: " + issue.getDate());
+            System.out.println("Latitude: " + issue.getLatitude());
+            System.out.println("Longitude: " + issue.getLongitude());
+            System.out.println("-----------------------------------");
+        }
     }
     
     private void initButtons()

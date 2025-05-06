@@ -4,8 +4,15 @@
  */
 package com.mycompany.bettertown.user;
 
+import com.github.kevinsawicki.http.HttpRequest;
+import com.mycompany.bettertown.IssueData;
+import com.mycompany.bettertown.login.LoginFrame;
 import com.mycompany.bettertown.login.LogoutConfirmationFrame;
 import com.mycompany.bettertown.login.LogoutListener;
+import com.mycompany.bettertown.login.ProfileData;
+import com.mycompany.bettertown.map.EventWaypoint;
+import com.mycompany.bettertown.map.MyWaypoint;
+import com.mycompany.bettertown.map.WaypointRender;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.ImageIcon;
@@ -20,6 +27,14 @@ import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.jxmapviewer.viewer.WaypointPainter;
 
 /**
  *
@@ -33,6 +48,12 @@ public class MainTabsUser extends javax.swing.JFrame {
     
     private JXMapViewer mapViewer;
     private final ImageIcon logoIcon;
+    private double currentLatitude;
+    private double currentLongitude;
+    private final Set<MyWaypoint> waypoints = new HashSet<>();
+    private ArrayList<IssueData> issueDataList = new ArrayList<IssueData>(); //this list and its contents has to be exported and imported from and to database
+    private EventWaypoint event;
+    private ProfileData currentUserData;
     
     public MainTabsUser() {
         initComponents();
@@ -46,7 +67,7 @@ public class MainTabsUser extends javax.swing.JFrame {
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        
+        //to be implemented: get profile data from login form
     }
     
     private void initMap()
@@ -71,6 +92,166 @@ public class MainTabsUser extends javax.swing.JFrame {
         mapViewer.addMouseMotionListener(mouseMove);
         mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(mapViewer));
         
+        //get all issue data from database
+        
+        //mouse listener for getting coordinates/ location from API and adding a waypoint:
+        mapViewer.addMouseListener(new MouseAdapter(){
+         @Override
+         public void mouseClicked(MouseEvent e) {
+            if(e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1){
+                java.awt.Point p = e.getPoint();
+                GeoPosition geo = mapViewer.convertPointToGeoPosition(p);
+                currentLatitude = geo.getLatitude();
+                currentLongitude = geo.getLongitude();
+                System.out.println("X:" + currentLatitude + ",Y:" + currentLongitude);
+                
+                showLocation(geo); //API for location
+                AddIssue addIssueForm = new AddIssue(new AddIssueListener() {
+                    @Override
+                    public void onIssueAdded(IssueData issueData) {
+                        //set the correct latitude and longitude
+                        issueData.setLatitude(currentLatitude);
+                        issueData.setLongitude(currentLongitude);
+
+                        //add to the list
+                        issueDataList.add(issueData);
+                        printCurrentIssues();
+
+                        //add a waypoint on the map
+                        addWaypoint(new MyWaypoint(issueData, event, new GeoPosition(currentLatitude, currentLongitude)));
+                        initWaypoint();
+                    }
+                });
+                addIssueForm.setCity(getCity(geo));
+                addIssueForm.setAddress(getLocation(geo));
+                addIssueForm.setUserName(currentUserData.getName());
+                addIssueForm.show();
+            } 
+        }
+        });
+        
+        event = getEvent();
+        
+    }
+    
+    private void initWaypoint()
+    {
+        WaypointPainter<MyWaypoint> wp = new WaypointRender();
+        wp.setWaypoints(waypoints);
+        mapViewer.setOverlayPainter(wp);
+        for(MyWaypoint d : waypoints)
+        {
+            mapViewer.add(d.getButton());
+        }
+    }
+    
+    private void addWaypoint(MyWaypoint waypoint)
+    {
+        for(MyWaypoint d : waypoints)
+        {
+            mapViewer.remove(d.getButton());
+        }
+        waypoints.add(waypoint);
+        initWaypoint();
+    }
+    
+    
+    public void clearWaypoint()
+    {
+        for(MyWaypoint d : waypoints)
+        {
+            mapViewer.remove(d.getButton());
+        }
+        waypoints.clear();
+        initWaypoint();
+    }
+    
+    private EventWaypoint getEvent()
+    {
+        return new EventWaypoint()
+        {
+            public void selected(MyWaypoint waypoint)
+            {
+                tabbedPane.setSelectedIndex(1);
+            }
+        };
+    }
+    
+    private double getCurrentLatitude()
+    {
+        return currentLatitude;
+    }
+    
+    private double getCurrentLongitude()
+    {
+        return currentLongitude;
+    }
+    
+    private void showLocation(GeoPosition geo)
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    System.out.println(getLocation(geo));
+                    System.out.println(getCity(geo));
+                } catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+    
+    public String getLocation(GeoPosition pos) throws JSONException
+    {
+        String body = HttpRequest.get("https://nominatim.openstreetmap.org/reverse?lat=" + pos.getLatitude() + "&lon=" + pos.getLongitude() + "&format=json").body();
+        JSONObject json = new JSONObject(body);
+        return json.getString("display_name");
+    }
+    
+  public String getCity(GeoPosition pos) throws JSONException 
+  {
+    String body = HttpRequest.get("https://nominatim.openstreetmap.org/reverse?lat=" + pos.getLatitude() + "&lon=" + pos.getLongitude() + "&format=json").body();
+    JSONObject json = new JSONObject(body);
+    JSONObject address = json.getJSONObject("address");
+    String city = address.optString("city"); // Use optString to handle cases where "city" might be missing
+    if (city == null || city.isEmpty()) {
+        city = address.optString("village"); // Try to get village if city is not found
+    }
+    return city;
+}
+  
+    public void setCurrentUserData(ProfileData profileData)
+    {
+        this.currentUserData = profileData;
+    }
+    
+    private void printCurrentIssues()
+    {
+        if (issueDataList.isEmpty()) 
+        {
+        System.out.println("No issues to display.");
+        return;
+        }
+        System.out.println("CURRENT ISSUES:");
+        for (IssueData issue : issueDataList) 
+        {
+            System.out.println("Title: " + issue.getTitle());
+            System.out.println("Description: " + issue.getDescription());
+            System.out.println("City: " + issue.getCity());
+            System.out.println("Address: " + issue.getAddress());
+            System.out.println("User Name: " + issue.getUsername());
+            System.out.println("Status: " + issue.getStatus());
+            System.out.println("Priority: " + issue.getPriority());
+            System.out.println("Photo Path: " + issue.getPhoto());
+            System.out.println("Date: " + issue.getDate());
+            System.out.println("Latitude: " + issue.getLatitude());
+            System.out.println("Longitude: " + issue.getLongitude());
+            System.out.println("-----------------------------------");
+        }
     }
     
     private void initButtons()
@@ -246,10 +427,18 @@ public class MainTabsUser extends javax.swing.JFrame {
 
         mapPanel.setBackground(new java.awt.Color(255, 255, 255));
 
+        comboMapType.setEditable(true);
         comboMapType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Open Street", "Virtual Earth", "Hybrid", "Satelite" }));
         comboMapType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboMapTypeActionPerformed(evt);
+            }
+        });
+
+        mapPanelSecondary.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        mapPanelSecondary.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mapPanelSecondaryMouseClicked(evt);
             }
         });
 
@@ -947,6 +1136,10 @@ public class MainTabsUser extends javax.swing.JFrame {
        PhotoView photoViewObj = new PhotoView();
        photoViewObj.show();
     }//GEN-LAST:event_photoLabelMouseClicked
+
+    private void mapPanelSecondaryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapPanelSecondaryMouseClicked
+  
+    }//GEN-LAST:event_mapPanelSecondaryMouseClicked
     
     /**
      * @param args the command line arguments

@@ -1,5 +1,7 @@
 /Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/BetterTown.java
+/Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/IssueData.java
 /Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/CommentAdminFrame.java
+/Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/EditIssue.java
 /Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/MainTabsAdmin.java
 /Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/login/DatabaseLogic.java
 /Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/login/LoginFrame.java
@@ -7,6 +9,12 @@
 /Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/login/LogoutListener.java
 /Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/login/ProfileData.java
 /Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/login/RegisterFrame.java
+/Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/map/ButtonWaypoint.java
+/Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/map/EventWaypoint.java
+/Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/map/MyWaypoint.java
+/Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/map/WaypointRender.java
+/Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/user/AddIssue.java
+/Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/user/AddIssueListener.java
 /Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/user/CommentUserFrame.java
 /Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/user/MainTabsUser.java
 /Users/luca/Desktop/FIS/FIS_Proiect/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/user/PhotoView.java

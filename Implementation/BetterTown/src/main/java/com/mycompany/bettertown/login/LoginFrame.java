@@ -23,6 +23,7 @@ public class LoginFrame extends javax.swing.JFrame {
      */
     ImageIcon logoIcon;
     private int roleToLog; //0 - none, 1 - user, 2 - admin
+    private ProfileData currentProfileData;
     public LoginFrame() {
         initComponents();
         
@@ -240,17 +241,21 @@ public class LoginFrame extends javax.swing.JFrame {
         //verify password from database with hashed (BCrypt) password!!!
         if(error == 0)
         {
+            //update the currentProfileData variable
+            currentProfileData = new ProfileData("name", "city", "password", "email", "status");
             //if there are no frame errors and no database validation errors, show the main tabs depending on the role selected
             this.hide();
             if(roleToLog == 1)
             {
                 MainTabsUser mainTabsUserObj = new MainTabsUser();
+                mainTabsUserObj.setCurrentUserData(currentProfileData);
                 mainTabsUserObj.show();
                 status = "user";
             }
             else if(roleToLog == 2)
             {
                 MainTabsAdmin mainTabsAdminObj = new MainTabsAdmin();
+                mainTabsAdminObj.setCurrentAdminData(currentProfileData);
                 mainTabsAdminObj.show();
                 status = "admin";
             }

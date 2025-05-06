@@ -30,7 +30,6 @@ import org.jxmapviewer.viewer.TileFactoryInfo;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import org.json.JSONException;
@@ -92,6 +91,8 @@ public class MainTabsUser extends javax.swing.JFrame {
         mapViewer.addMouseListener(mouseMove);
         mapViewer.addMouseMotionListener(mouseMove);
         mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(mapViewer));
+        
+        //get all issue data from database
         
         //mouse listener for getting coordinates/ location from API and adding a waypoint:
         mapViewer.addMouseListener(new MouseAdapter(){
@@ -426,6 +427,7 @@ public class MainTabsUser extends javax.swing.JFrame {
 
         mapPanel.setBackground(new java.awt.Color(255, 255, 255));
 
+        comboMapType.setEditable(true);
         comboMapType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Open Street", "Virtual Earth", "Hybrid", "Satelite" }));
         comboMapType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -115,6 +115,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
 
                         // Add to the issue list
                         issueDataList.add(issueData);
+                        printCurrentIssues();
 
                         // Add a waypoint to the map
                         addWaypoint(new MyWaypoint(issueData, event, new GeoPosition(currentLatitude, currentLongitude)));
@@ -225,6 +226,31 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     public void setCurrentAdminData(ProfileData profileData)
     {
         this.currentAdminData = profileData;
+    }
+    
+    private void printCurrentIssues()
+    {
+        if (issueDataList.isEmpty()) 
+        {
+        System.out.println("No issues to display.");
+        return;
+        }
+        System.out.println("CURRENT ISSUES:");
+        for (IssueData issue : issueDataList) 
+        {
+            System.out.println("Title: " + issue.getTitle());
+            System.out.println("Description: " + issue.getDescription());
+            System.out.println("City: " + issue.getCity());
+            System.out.println("Address: " + issue.getAddress());
+            System.out.println("User Name: " + issue.getUsername());
+            System.out.println("Status: " + issue.getStatus());
+            System.out.println("Priority: " + issue.getPriority());
+            System.out.println("Photo Path: " + issue.getPhoto());
+            System.out.println("Date: " + issue.getDate());
+            System.out.println("Latitude: " + issue.getLatitude());
+            System.out.println("Longitude: " + issue.getLongitude());
+            System.out.println("-----------------------------------");
+        }
     }
     
     private void initButtons()

@@ -21,6 +21,8 @@ public class LoginFrame extends javax.swing.JFrame {
     /**
      * Creates new form loginFrame
      */
+    
+    
     ImageIcon logoIcon;
     private int roleToLog; //0 - none, 1 - user, 2 - admin
     private ProfileData currentProfileData;

@@ -29,9 +29,11 @@ import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jxmapviewer.viewer.WaypointPainter;
@@ -254,6 +256,29 @@ public class MainTabsUser extends javax.swing.JFrame {
         }
     }
     
+    private GeoPosition searchLocation(String searchItem) {
+    String body = null;
+    try {
+        body = HttpRequest.get("https://nominatim.openstreetmap.org/search.php?q=" + searchItem + "&format=json").body();
+        JSONArray jsonArray = new JSONArray(body);
+
+        if (jsonArray.length() > 0) {
+            JSONObject firstResult = jsonArray.getJSONObject(0);
+            double latitude = Double.parseDouble(firstResult.getString("lat"));
+            double longitude = Double.parseDouble(firstResult.getString("lon"));
+            return new GeoPosition(latitude, longitude);
+        } else {
+            System.out.println("Niciun rezultat găsit pentru: " + searchItem);
+            return null;
+        }
+
+    } catch (org.json.JSONException e) {
+        e.printStackTrace();
+        System.err.println("Eroare la obținerea sau procesarea datelor de la Nominatim. Răspuns primit (dacă există): " + body);
+        return null;
+    }
+}
+    
     private void initButtons()
     {
         ImageIcon mapIcon = new ImageIcon("map.png");
@@ -267,6 +292,9 @@ public class MainTabsUser extends javax.swing.JFrame {
         
         ImageIcon feedbackIcon = new ImageIcon("feedback.png");
         feedbackButton.setIcon(feedbackIcon);
+        
+        ImageIcon searchIcon = new ImageIcon("search.png");
+        mapSearchButton.setIcon(searchIcon);
     }
 
     /**
@@ -293,6 +321,9 @@ public class MainTabsUser extends javax.swing.JFrame {
         mapPanelSecondary = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        mapSearchButton = new javax.swing.JButton();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        searchMapTextPane = new javax.swing.JTextPane();
         feedPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -450,7 +481,7 @@ public class MainTabsUser extends javax.swing.JFrame {
         );
         mapPanelSecondaryLayout.setVerticalGroup(
             mapPanelSecondaryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 448, Short.MAX_VALUE)
+            .addGap(0, 446, Short.MAX_VALUE)
         );
 
         jLabel4.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
@@ -458,6 +489,16 @@ public class MainTabsUser extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
         jLabel5.setText("Report an issue on map:");
+
+        mapSearchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mapSearchButtonActionPerformed(evt);
+            }
+        });
+
+        searchMapTextPane.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 11)); // NOI18N
+        searchMapTextPane.setToolTipText("");
+        jScrollPane6.setViewportView(searchMapTextPane);
 
         javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
         mapPanel.setLayout(mapPanelLayout);
@@ -469,7 +510,11 @@ public class MainTabsUser extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mapPanelLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 266, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(mapSearchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44)
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
                 .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -479,11 +524,14 @@ public class MainTabsUser extends javax.swing.JFrame {
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mapPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5))
-                .addGap(10, 10, 10)
+                .addGroup(mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel4)
+                        .addComponent(jLabel5)
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(mapSearchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(mapPanelSecondary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -1140,6 +1188,14 @@ public class MainTabsUser extends javax.swing.JFrame {
     private void mapPanelSecondaryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapPanelSecondaryMouseClicked
   
     }//GEN-LAST:event_mapPanelSecondaryMouseClicked
+
+    private void mapSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mapSearchButtonActionPerformed
+        // TODO add your handling code here:
+        String searchItem = searchMapTextPane.getText().replace(" ", "%20") + "%20";
+        GeoPosition searchCoord = searchLocation(searchItem);
+        mapViewer.setZoom(1);
+        mapViewer.setAddressLocation(searchCoord);
+    }//GEN-LAST:event_mapSearchButtonActionPerformed
     
     /**
      * @param args the command line arguments
@@ -1229,6 +1285,7 @@ public class MainTabsUser extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
@@ -1238,8 +1295,10 @@ public class MainTabsUser extends javax.swing.JFrame {
     private javax.swing.JButton mapButton;
     private javax.swing.JPanel mapPanel;
     private javax.swing.JPanel mapPanelSecondary;
+    private javax.swing.JButton mapSearchButton;
     private javax.swing.JLabel photoLabel;
     private javax.swing.JButton reportButton;
+    private javax.swing.JTextPane searchMapTextPane;
     private javax.swing.JButton starButton1;
     private javax.swing.JButton starButton2;
     private javax.swing.JButton starButton3;

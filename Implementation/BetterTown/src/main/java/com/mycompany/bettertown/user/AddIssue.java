@@ -6,8 +6,10 @@ package com.mycompany.bettertown.user;
 
 import com.mycompany.bettertown.IssueData;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -25,14 +27,15 @@ public class AddIssue extends javax.swing.JFrame {
      * Creates new form AddIssue
      */
     private AddIssueListener listener;
+    private ImageIcon image;
 
     
     public AddIssue(AddIssueListener listener) {
         initComponents();
         this.listener = listener;
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
        
+               
         LocalTime currentTime = LocalTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         String formattedTime = currentTime.format(formatter);
@@ -64,7 +67,7 @@ public class AddIssue extends javax.swing.JFrame {
                 String priority = priorityLabel.getText();
                 String photoPath = photoNameLabel.getText();
                 
-                IssueData newIssue = new IssueData(title, description, photoPath, Integer.parseInt(priority), city, address, new java.util.Date(), userName, status, 0.0, 0.0);
+                IssueData newIssue = new IssueData(title, description, image, Integer.parseInt(priority), city, address, new java.util.Date(), userName, status, 0.0, 0.0);
                 
                 if(listener != null)
                 {
@@ -91,9 +94,8 @@ public class AddIssue extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        UploadButton = new javax.swing.JButton();
         photoNameLabel = new javax.swing.JLabel();
-        photoLabel = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         cityTextField = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -129,16 +131,25 @@ public class AddIssue extends javax.swing.JFrame {
 
         jTextField1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jButton1.setText("Upload...");
+        UploadButton.setText("Upload...");
+        UploadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UploadButtonActionPerformed(evt);
+            }
+        });
 
         photoNameLabel.setFont(new java.awt.Font(".AppleSystemUIFont", 2, 13)); // NOI18N
         photoNameLabel.setForeground(new java.awt.Color(102, 102, 102));
         photoNameLabel.setText("No photo uploaded");
-
-        photoLabel.setBackground(new java.awt.Color(204, 204, 204));
-        photoLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+        photoNameLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                photoLabelMouseClicked(evt);
+                photoNameLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                photoNameLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                photoNameLabelMouseExited(evt);
             }
         });
 
@@ -236,17 +247,16 @@ public class AddIssue extends javax.swing.JFrame {
                                 .addComponent(jLabel8)
                                 .addGap(18, 18, 18)
                                 .addComponent(priorityLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel4)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton1))
-                                    .addComponent(confirmButton))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(photoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(photoNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))))
+                                .addComponent(UploadButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(photoNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(confirmButton)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -288,12 +298,10 @@ public class AddIssue extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jButton1)
+                    .addComponent(UploadButton)
                     .addComponent(photoNameLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(photoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(confirmButton))
+                .addGap(18, 18, 18)
+                .addComponent(confirmButton)
                 .addGap(18, 18, 18))
         );
 
@@ -314,24 +322,93 @@ public class AddIssue extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 6, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void photoLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_photoLabelMouseClicked
-        PhotoView photoViewObj = new PhotoView();
-        photoViewObj.show();
-    }//GEN-LAST:event_photoLabelMouseClicked
-
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_confirmButtonActionPerformed
+
+    private void UploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UploadButtonActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileUpload = new JFileChooser();
+        fileUpload.setCurrentDirectory(new File("."));
+        
+        int res = fileUpload.showSaveDialog(null);
+        if(res == JFileChooser.APPROVE_OPTION)
+        {
+            File filePath = new File(fileUpload.getSelectedFile().getAbsolutePath());
+
+            //only .png files are supported
+            if(filePath.toString().endsWith(".png"))
+            {
+                System.out.println(filePath);
+                image = new ImageIcon(filePath.toString());
+                this.photoNameLabel.setText(extractLast(filePath.toString()));
+            }
+            else
+            {
+                JFrame frame = new JFrame("File Support");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.setSize(300, 100);
+                frame.setLocationRelativeTo(null);
+                JLabel messageLabel = new JLabel("Only .png files are supported!", SwingConstants.CENTER);
+                messageLabel.setFont(new Font(".AppleSystemUIFont", Font.BOLD, 13));
+                frame.getContentPane().add(messageLabel);
+                frame.setVisible(true);
+            }
+        }
+    }//GEN-LAST:event_UploadButtonActionPerformed
+
+    private void photoNameLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_photoNameLabelMouseClicked
+        // TODO add your handling code here:
+        if(!this.photoNameLabel.getText().equals("No photo uploaded"))
+        {
+            PhotoView photoViewer = new PhotoView();
+            photoViewer.setImage(image);
+            photoViewer.show();
+        }
+    }//GEN-LAST:event_photoNameLabelMouseClicked
+
+    private void photoNameLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_photoNameLabelMouseEntered
+        // TODO add your handling code here:
+        if(!this.photoNameLabel.getText().equals("No photo uploaded"))
+            this.photoNameLabel.setText("<html><u>" + this.photoNameLabel.getText() + "</u><html>");
+    }//GEN-LAST:event_photoNameLabelMouseEntered
+
+    private void photoNameLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_photoNameLabelMouseExited
+        // TODO add your handling code here:
+        if(!this.photoNameLabel.getText().equals("No photo uploaded"))
+        {
+            String currentText = this.photoNameLabel.getText();
+            String nonUnderlinedText = currentText.replaceAll("<[/]?u>", "");
+            nonUnderlinedText = nonUnderlinedText.replaceAll("<[/]?html>", "");
+            this.photoNameLabel.setText(nonUnderlinedText);
+        }
+    }//GEN-LAST:event_photoNameLabelMouseExited
+    
+     public static String extractLast(String path) {
+        if (path == null || path.trim().isEmpty()) 
+        {
+            return "";
+        }
+        String normalizedPath = path.replace("\\", "/");
+        String[] components = normalizedPath.split("/");
+        if (components.length > 0) {
+            return components[components.length - 1];
+        } else {
+            return "";
+        }
+    }
     
     public void setCity(String city)
     {
@@ -378,12 +455,9 @@ public class AddIssue extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
         public void run() {
-            // Normally, you'd create and show the form.
-            // You have to pass a listener since your AddIssue expects it.
             new AddIssue(new AddIssueListener() {
                 @Override
                 public void onIssueAdded(IssueData issue) {
-                    // Handle the new issue added (for testing, you could just print it out)
                     System.out.println("New issue added: " + issue.getTitle());
                 }
             }).setVisible(true);
@@ -393,12 +467,12 @@ public class AddIssue extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton UploadButton;
     private javax.swing.JEditorPane addressEditorPane;
     private javax.swing.JTextField cityTextField;
     private javax.swing.JButton confirmButton;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JEditorPane descriptionEditorPane;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -413,7 +487,6 @@ public class AddIssue extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JLabel photoLabel;
     private javax.swing.JLabel photoNameLabel;
     private javax.swing.JLabel priorityLabel;
     private javax.swing.JLabel statusLabel;

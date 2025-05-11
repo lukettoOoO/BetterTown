@@ -244,7 +244,7 @@ public class LoginFrame extends javax.swing.JFrame {
         if(error == 0)
         {
             //update the currentProfileData variable
-            currentProfileData = new ProfileData("name", "city", "password", "email", "status");
+            currentProfileData = new ProfileData("Luca", "city", "password", "email", "status");
             //if there are no frame errors and no database validation errors, show the main tabs depending on the role selected
             this.hide();
             if(roleToLog == 1)

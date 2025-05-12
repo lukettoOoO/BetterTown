@@ -166,12 +166,19 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     
     public void clearWaypoint()
     {
-        for(MyWaypoint d : waypoints)
+        for(MyWaypoint d : waypoints)  //se sterg butoanele waypoint-urilor
         {
             mapViewer.remove(d.getButton());
         }
-        waypoints.clear();
-        initWaypoint();
+        waypoints.clear(); //se sterg waypint-urile
+        initWaypoint(); //se reinitializeaza waypoint-urile pe harta pentru ca aceasta sa fie actualizata
+    }
+    
+    public void removeWaypoint(MyWaypoint waypoint)
+    {
+            mapViewer.remove(waypoint.getButton());
+            waypoints.remove(waypoint);
+            initWaypoint();
     }
     
      private EventWaypoint getEvent()
@@ -407,6 +414,8 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         viewButton = new javax.swing.JButton();
         commentsButton = new javax.swing.JButton();
         feedSearchButton = new javax.swing.JButton();
+        updateButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
         alertsLabel = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -548,7 +557,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mapPanelLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(mapSearchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -602,7 +611,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
         jLabel2.setText("Sort by:");
 
-        feedSortComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Title", "Priority", "City", "Address", "Name", "Status" }));
+        feedSortComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascending", "Descending" }));
         feedSortComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 feedSortComboBoxActionPerformed(evt);
@@ -815,6 +824,21 @@ public class MainTabsAdmin extends javax.swing.JFrame {
             }
         });
 
+        updateButton.setText("Update");
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateButtonActionPerformed(evt);
+            }
+        });
+
+        deleteButton.setForeground(new java.awt.Color(255, 0, 0));
+        deleteButton.setText("Delete");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout feedPanelLayout = new javax.swing.GroupLayout(feedPanel);
         feedPanel.setLayout(feedPanelLayout);
         feedPanelLayout.setHorizontalGroup(
@@ -838,13 +862,16 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                 .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(feedPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, feedPanelLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(commentsButton, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(viewButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(feedPanelLayout.createSequentialGroup()
+                                .addComponent(updateButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(viewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(feedPanelLayout.createSequentialGroup()
+                                .addComponent(deleteButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(commentsButton)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, feedPanelLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -859,13 +886,14 @@ public class MainTabsAdmin extends javax.swing.JFrame {
             feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(feedPanelLayout.createSequentialGroup()
                 .addGap(11, 11, 11)
-                .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(feedSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(feedSortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(reportButton)
-                    .addComponent(feedSearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(feedSearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(feedSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2)
+                        .addComponent(feedSortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(reportButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -874,9 +902,13 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                     .addGroup(feedPanelLayout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(viewButton)
+                        .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(viewButton)
+                            .addComponent(updateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(commentsButton)
+                        .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(commentsButton)
+                            .addComponent(deleteButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(upButton)
@@ -913,7 +945,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                         .addComponent(jButton4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton5)
-                        .addGap(0, 480, Short.MAX_VALUE))
+                        .addGap(0, 500, Short.MAX_VALUE))
                     .addComponent(jScrollPane2))
                 .addContainerGap())
         );
@@ -999,7 +1031,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                             .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(112, Short.MAX_VALUE))
+                .addContainerGap(132, Short.MAX_VALUE))
         );
         feedbackLabelLayout.setVerticalGroup(
             feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1132,26 +1164,38 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
         int index = comboMapType.getSelectedIndex();
         switch (index) {
-            case 0:
-            //sortByTitle
-            break;
-            case 1:
-            //sortByPriority
-            break;
-            case 2:
-            //sortByCity
-            break;
-            case 3:
-            //sortByAddress
-            break;
-            case 4:
-            //sortByName
-            break;
-            case 5:
-            //sortByStatus
-            break;
-            default:
-            break;
+            case 0 -> {
+                for (int i = 0; i < issueViewListModel.getSize() - 1; i++)
+                {
+                    for (int j = 0; j < issueViewListModel.getSize() - i - 1; j++)
+                    {
+                        if (issueViewListModel.getElementAt(j).compareTo(issueViewListModel.getElementAt(j + 1)) > 0)
+                        {
+                            String temp = issueViewListModel.getElementAt(j);
+                            issueViewListModel.setElementAt(issueViewListModel.getElementAt(j + 1), j);
+                            issueViewListModel.setElementAt(temp, j + 1);
+                        }
+                    }
+                }
+                issueViewList.setModel(issueViewListModel);
+            }
+            case 1 -> {
+                for (int i = 0; i < issueViewListModel.getSize() - 1; i++)
+                {
+                    for (int j = 0; j < issueViewListModel.getSize() - i - 1; j++)
+                    {
+                        if (issueViewListModel.getElementAt(j).compareTo(issueViewListModel.getElementAt(j + 1)) < 0)
+                        {
+                            String temp = issueViewListModel.getElementAt(j);
+                            issueViewListModel.setElementAt(issueViewListModel.getElementAt(j + 1), j);
+                            issueViewListModel.setElementAt(temp, j + 1);
+                        }
+                    }
+                }
+                issueViewList.setModel(issueViewListModel);
+            }
+            default -> {
+            }
         }
     }//GEN-LAST:event_feedSortComboBoxActionPerformed
 
@@ -1285,6 +1329,96 @@ public class MainTabsAdmin extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_feedSearchButtonActionPerformed
+
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+        // TODO add your handling code here:
+        int selectedIndex = issueViewList.getSelectedIndex();
+        UpdateIssue updateIssueForm = new UpdateIssue(new AddIssueListener() {
+                    @Override
+                    public void onIssueAdded(IssueData issueData) { //when confirm button has been pressed in update issue form
+                        for(MyWaypoint w : waypoints)
+                        {
+                            if(w.getData().getTitle().equals(issueDataList.get(selectedIndex).getTitle()))
+                            {
+                               w.setData(issueData);
+                               break;
+                            }
+                        }
+                        initWaypoint();
+                        issueDataList.set(selectedIndex, issueData);
+                        issueViewListModel.setElementAt(issueData.getTitle(), selectedIndex);
+                        printCurrentIssues();
+                        if(selectedIndex != -1)
+                        {
+                            String selectedTitle = issueViewListModel.getElementAt(selectedIndex);
+                            for(IssueData issue : issueDataList)
+                            {
+                                if(issue.getTitle().equals(selectedTitle))
+                                {
+                                    titleLabel.setText(issue.getTitle());
+                                    descriptionEditorPane.setText(issue.getDescription());
+                                    Image scaledImage = issue.getImage().getImage().getScaledInstance(photoLabel.getWidth(), photoLabel.getHeight(), Image.SCALE_SMOOTH);
+                                    ImageIcon scaledIcon = new ImageIcon(scaledImage);
+                                    photoLabel.setIcon(scaledIcon);
+                                    cityLabel.setText(issue.getCity());
+                                    addressEditorPane.setText(issue.getAddress());
+                                    priorityLabel.setText(String.valueOf(issue.getPriority()));
+                                    userLabel.setText(issue.getUsername());
+                                    dateLabel.setText(issue.getDate().toString());
+                                    statusLabel.setText(issue.getStatus());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
+        IssueData selectedIssue = issueDataList.get(selectedIndex);
+        updateIssueForm.setTitle(selectedIssue.getTitle());
+        updateIssueForm.setDescription(selectedIssue.getDescription());
+        updateIssueForm.setCity(selectedIssue.getCity());
+        updateIssueForm.setAddress(selectedIssue.getAddress());
+        updateIssueForm.setDate(selectedIssue.getDate());
+        updateIssueForm.setPriority(selectedIssue.getPriority());
+        updateIssueForm.setUserName(selectedIssue.getUsername());
+        updateIssueForm.setStatus(selectedIssue.getStatus());
+        updateIssueForm.setImage(selectedIssue.getImage());
+        updateIssueForm.setLatitude(selectedIssue.getLatitude());
+        updateIssueForm.setLongitude(selectedIssue.getLongitude());
+        updateIssueForm.show();
+    }//GEN-LAST:event_updateButtonActionPerformed
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+
+        for(MyWaypoint w : waypoints)
+        {
+            if(w.getData().getTitle().equals(issueDataList.get(issueViewList.getSelectedIndex()).getTitle()))
+            {
+                this.removeWaypoint(w);
+                break;
+            }
+        }
+        int selectedIndex = issueViewList.getSelectedIndex();
+        issueDataList.remove(issueViewList.getSelectedIndex());
+        issueViewListModel.removeElementAt(issueViewList.getSelectedIndex());
+        initWaypoint();
+        if(issueViewListModel.getSize() >= 1)
+        {
+            issueViewList.setSelectedIndex(selectedIndex - 1);
+        }
+        else if(issueViewListModel.getSize() == 0)
+        {
+            titleLabel.setText("");
+            photoLabel.setIcon(null);
+            cityLabel.setText("");
+            priorityLabel.setText("");
+            userLabel.setText("");
+            dateLabel.setText("");
+            statusLabel.setText("");
+            addressEditorPane.setText("");
+            descriptionEditorPane.setText("");
+        }
+        printCurrentIssues();
+    }//GEN-LAST:event_deleteButtonActionPerformed
     
     /**
      * @param args the command line arguments
@@ -1332,6 +1466,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> comboMapType;
     private javax.swing.JButton commentsButton;
     private javax.swing.JLabel dateLabel;
+    private javax.swing.JButton deleteButton;
     private javax.swing.JEditorPane descriptionEditorPane;
     private javax.swing.JButton downButton;
     private javax.swing.JButton feedButton;
@@ -1393,6 +1528,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JLabel titleLabel;
     private javax.swing.JButton upButton;
+    private javax.swing.JButton updateButton;
     private javax.swing.JLabel userLabel;
     private javax.swing.JButton viewButton;
     // End of variables declaration//GEN-END:variables

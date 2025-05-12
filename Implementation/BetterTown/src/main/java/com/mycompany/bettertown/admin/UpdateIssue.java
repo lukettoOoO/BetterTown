@@ -4,16 +4,20 @@
  */
 package com.mycompany.bettertown.admin;
 
-import static com.mycompany.bettertown.user.AddIssue.extractLast;
-import com.mycompany.bettertown.user.PhotoView;
+import com.mycompany.bettertown.user.*;
+import com.mycompany.bettertown.IssueData;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 /**
  *
@@ -22,10 +26,77 @@ import javax.swing.SwingConstants;
 public class UpdateIssue extends javax.swing.JFrame {
 
     /**
-     * Creates new form EditIssue
+     * Creates new form AddIssue
      */
-    public UpdateIssue() {
+    private AddIssueListener listener;
+    private ImageIcon image;
+    private boolean photoUploaded;
+    private double latitude;
+    private double longitude;
+    private Date date;
+
+    
+    public UpdateIssue(AddIssueListener listener) {
         initComponents();
+        this.listener = listener;
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+       
+               
+        //LocalTime currentTime = LocalTime.now();
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        //String formattedTime = currentTime.format(formatter);
+        //this.dateLabel.setText(LocalDate.now().toString() + " " + formattedTime);
+        //this.priorityLabel.setText("0");
+        //this.statusLabel.setText("Not resolved");
+        if(statusLabel.getText().equals("Not resolved"))
+        {
+            statusLabel.setForeground(Color.RED);
+        }
+        else if(statusLabel.getText().equals("In progress"))
+        {
+            statusLabel.setForeground(Color.YELLOW);
+        }
+        else if(statusLabel.getText().equals("Resolved"))
+        {
+            statusLabel.setForeground(Color.GREEN);
+        }
+        
+        confirmButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String title = titleTextField.getText();
+                String description = descriptionEditorPane.getText();
+                String city = cityTextField.getText();
+                String address = addressEditorPane.getText();
+                String userName = userNameTextField.getText();
+                String status = statusLabel.getText();
+                String priority = priorityTextField.getText();
+                String photoPath = photoNameLabel.getText();
+                
+                if(titleTextField.getText().equals("") || descriptionEditorPane.getText().equals(""))
+                {
+                    JFrame messageFrame = new JFrame("Information Needed");
+                    messageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    JLabel messageLabel = new JLabel("Please enter a full title and description and modify photo if necessary!", SwingConstants.CENTER);
+                    messageLabel.setFont(new Font(".AppleSystemUIFont", Font.PLAIN, 11));
+                    messageFrame.getContentPane().add(messageLabel);
+                    messageFrame.setSize(400, 100);
+                    messageFrame.setLocationRelativeTo(null);
+                    messageFrame.setVisible(true);
+                }
+                else
+                {
+                    IssueData newIssue = new IssueData(title, description, image, Integer.parseInt(priority), city, address, date, userName, status, latitude, longitude);
+                
+                    if(listener != null)
+                    {
+                        listener.onIssueAdded(newIssue);
+                    }
+
+                    dispose();
+                }
+            }
+        });
     }
 
     /**
@@ -42,7 +113,7 @@ public class UpdateIssue extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        titleTextField = new javax.swing.JTextField();
         UploadButton = new javax.swing.JButton();
         photoNameLabel = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -60,8 +131,9 @@ public class UpdateIssue extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         statusLabel = new javax.swing.JLabel();
         confirmButton = new javax.swing.JButton();
-        priorityTextField1 = new javax.swing.JTextField();
-        statusComboBox1 = new javax.swing.JComboBox<>();
+        statusComboBox = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
+        priorityTextField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,7 +151,7 @@ public class UpdateIssue extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 14)); // NOI18N
         jLabel4.setText("Photo:");
 
-        jTextField1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        titleTextField.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         UploadButton.setText("Upload...");
         UploadButton.addActionListener(new java.awt.event.ActionListener() {
@@ -106,6 +178,7 @@ public class UpdateIssue extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 14)); // NOI18N
         jLabel5.setText("Date:");
 
+        cityTextField.setEditable(false);
         cityTextField.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel6.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 14)); // NOI18N
@@ -124,6 +197,7 @@ public class UpdateIssue extends javax.swing.JFrame {
         descriptionEditorPane.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
         jScrollPane3.setViewportView(descriptionEditorPane);
 
+        addressEditorPane.setEditable(false);
         addressEditorPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         addressEditorPane.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 11)); // NOI18N
         jScrollPane4.setViewportView(addressEditorPane);
@@ -131,6 +205,7 @@ public class UpdateIssue extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 14)); // NOI18N
         jLabel9.setText("User name:");
 
+        userNameTextField.setEditable(false);
         userNameTextField.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
         userNameTextField.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -146,67 +221,75 @@ public class UpdateIssue extends javax.swing.JFrame {
             }
         });
 
-        priorityTextField1.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
-        priorityTextField1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        statusComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Not Resolved", "In Progress", "Resolved" }));
+        statusComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                statusComboBoxActionPerformed(evt);
+            }
+        });
 
-        statusComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jLabel11.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel11.setText("Modify photo:");
+
+        priorityTextField.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(15, 19, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(59, 59, 59)
-                                .addComponent(jTextField1))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane3))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel7))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(cityTextField)
-                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(priorityTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(21, 21, 21))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel8)
-                            .addGap(258, 258, 258))
+                            .addComponent(jLabel2)
+                            .addGap(59, 59, 59)
+                            .addComponent(titleTextField))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel6)
+                                .addComponent(jLabel7)
+                                .addComponent(jLabel5))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cityTextField)
+                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel11)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel10)
+                                    .addGap(37, 37, 37)
+                                    .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                            .addComponent(statusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel4)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(UploadButton)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(photoNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(photoNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel9)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel10)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(statusLabel)))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(userNameTextField)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(0, 0, Short.MAX_VALUE)
-                                    .addComponent(statusComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addGap(31, 31, 31)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(userNameTextField)
+                            .addComponent(priorityTextField))))
+                .addGap(21, 21, 21))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(confirmButton)
@@ -220,7 +303,7 @@ public class UpdateIssue extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(titleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
@@ -239,25 +322,29 @@ public class UpdateIssue extends javax.swing.JFrame {
                     .addComponent(dateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
-                    .addComponent(priorityTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(priorityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(userNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(statusLabel)
-                    .addComponent(statusComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
+                            .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(statusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(27, 27, 27))
+                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(UploadButton)
                     .addComponent(photoNameLabel))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(confirmButton)
-                .addContainerGap())
+                .addGap(18, 18, 18))
         );
 
         if(statusLabel.getText().equals("Not resolved"))
@@ -277,21 +364,27 @@ public class UpdateIssue extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_confirmButtonActionPerformed
+
     private void UploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UploadButtonActionPerformed
         // TODO add your handling code here:
         JFileChooser fileUpload = new JFileChooser();
         fileUpload.setCurrentDirectory(new File("."));
-
+        
         int res = fileUpload.showSaveDialog(null);
         if(res == JFileChooser.APPROVE_OPTION)
         {
@@ -301,7 +394,7 @@ public class UpdateIssue extends javax.swing.JFrame {
             if(filePath.toString().endsWith(".png"))
             {
                 System.out.println(filePath);
-                ImageIcon image = new ImageIcon(filePath.toString());
+                image = new ImageIcon(filePath.toString());
                 this.photoNameLabel.setText(extractLast(filePath.toString()));
             }
             else
@@ -323,7 +416,6 @@ public class UpdateIssue extends javax.swing.JFrame {
         if(!this.photoNameLabel.getText().equals("No photo uploaded"))
         {
             PhotoView photoViewer = new PhotoView();
-            ImageIcon image = null;
             photoViewer.setImage(image);
             photoViewer.show();
         }
@@ -332,7 +424,7 @@ public class UpdateIssue extends javax.swing.JFrame {
     private void photoNameLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_photoNameLabelMouseEntered
         // TODO add your handling code here:
         if(!this.photoNameLabel.getText().equals("No photo uploaded"))
-        this.photoNameLabel.setText("<html><u>" + this.photoNameLabel.getText() + "</u><html>");
+            this.photoNameLabel.setText("<html><u>" + this.photoNameLabel.getText() + "</u><html>");
     }//GEN-LAST:event_photoNameLabelMouseEntered
 
     private void photoNameLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_photoNameLabelMouseExited
@@ -346,10 +438,81 @@ public class UpdateIssue extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_photoNameLabelMouseExited
 
-    private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
+    private void statusComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusComboBoxActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_confirmButtonActionPerformed
-
+        statusLabel.setText((String) statusComboBox.getSelectedItem());
+    }//GEN-LAST:event_statusComboBoxActionPerformed
+    
+     public static String extractLast(String path) {
+        if (path == null || path.trim().isEmpty()) 
+        {
+            return "";
+        }
+        String normalizedPath = path.replace("\\", "/");
+        String[] components = normalizedPath.split("/");
+        if (components.length > 0) {
+            return components[components.length - 1];
+        } else {
+            return "";
+        }
+    }
+    
+    public void setCity(String city)
+    {
+        cityTextField.setText(city);
+    }
+    
+    public void setAddress(String address)
+    {
+        addressEditorPane.setText(address);
+    }
+    
+    public void setUserName(String name)
+    {
+        userNameTextField.setText(name);
+    }
+    
+    public void setDescription(String description)
+    {
+        descriptionEditorPane.setText(description);
+    }
+    
+    public void setTitle(String title)
+    {
+        titleTextField.setText(title);
+    }
+    
+    public void setDate(Date date)
+    {
+        dateLabel.setText(date.toString());
+        this.date = date;
+    }
+    
+    public void setPriority(int priority)
+    {
+        priorityTextField.setText(String.valueOf(priority));
+    }
+    
+    public void setStatus(String status)
+    {
+        statusLabel.setText(status);
+    }
+    
+    public void setImage(ImageIcon icon)
+    {
+        image = icon;
+    }
+    
+    public void setLatitude(double latitude)
+    {
+        this.latitude = latitude;
+    }
+    
+    public void setLongitude(double longitude)
+    {
+        this.longitude = longitude;
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -380,10 +543,16 @@ public class UpdateIssue extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new UpdateIssue().setVisible(true);
-            }
-        });
+        public void run() {
+            new UpdateIssue(new AddIssueListener() {
+                @Override
+                public void onIssueAdded(IssueData issue) {
+                    System.out.println("New issue added: " + issue.getTitle());
+                }
+            }).setVisible(true);
+        }
+        }); 
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -395,6 +564,7 @@ public class UpdateIssue extends javax.swing.JFrame {
     private javax.swing.JEditorPane descriptionEditorPane;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -406,11 +576,11 @@ public class UpdateIssue extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel photoNameLabel;
-    private javax.swing.JTextField priorityTextField1;
-    private javax.swing.JComboBox<String> statusComboBox1;
+    private javax.swing.JTextField priorityTextField;
+    private javax.swing.JComboBox<String> statusComboBox;
     private javax.swing.JLabel statusLabel;
+    private javax.swing.JTextField titleTextField;
     private javax.swing.JTextField userNameTextField;
     // End of variables declaration//GEN-END:variables
 }

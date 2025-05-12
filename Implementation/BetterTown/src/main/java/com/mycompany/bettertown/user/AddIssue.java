@@ -58,7 +58,7 @@ public class AddIssue extends javax.swing.JFrame {
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String title = jTextField1.getText();
+                String title = titleTextField.getText();
                 String description = descriptionEditorPane.getText();
                 String city = cityTextField.getText();
                 String address = addressEditorPane.getText();
@@ -67,14 +67,28 @@ public class AddIssue extends javax.swing.JFrame {
                 String priority = priorityLabel.getText();
                 String photoPath = photoNameLabel.getText();
                 
-                IssueData newIssue = new IssueData(title, description, image, Integer.parseInt(priority), city, address, new java.util.Date(), userName, status, 0.0, 0.0);
-                
-                if(listener != null)
+                if(titleTextField.getText().equals("") || descriptionEditorPane.getText().equals("") || image == null)
                 {
-                    listener.onIssueAdded(newIssue);
+                    JFrame messageFrame = new JFrame("Information Needed");
+                    messageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    JLabel messageLabel = new JLabel("Please enter a full title and description and upload a photo!", SwingConstants.CENTER);
+                    messageLabel.setFont(new Font(".AppleSystemUIFont", Font.PLAIN, 11));
+                    messageFrame.getContentPane().add(messageLabel);
+                    messageFrame.setSize(400, 100);
+                    messageFrame.setLocationRelativeTo(null);
+                    messageFrame.setVisible(true);
                 }
+                else
+                {
+                    IssueData newIssue = new IssueData(title, description, image, Integer.parseInt(priority), city, address, new java.util.Date(), userName, status, 0.0, 0.0);
                 
-                dispose();
+                    if(listener != null)
+                    {
+                        listener.onIssueAdded(newIssue);
+                    }
+
+                    dispose();
+                }
             }
         });
     }
@@ -93,7 +107,7 @@ public class AddIssue extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        titleTextField = new javax.swing.JTextField();
         UploadButton = new javax.swing.JButton();
         photoNameLabel = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -129,7 +143,7 @@ public class AddIssue extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 14)); // NOI18N
         jLabel4.setText("Photo:");
 
-        jTextField1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        titleTextField.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         UploadButton.setText("Upload...");
         UploadButton.addActionListener(new java.awt.event.ActionListener() {
@@ -220,7 +234,7 @@ public class AddIssue extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(jLabel2)
                                     .addGap(59, 59, 59)
-                                    .addComponent(jTextField1))
+                                    .addComponent(titleTextField))
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                     .addComponent(jLabel3)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -266,7 +280,7 @@ public class AddIssue extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(titleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
@@ -486,10 +500,10 @@ public class AddIssue extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel photoNameLabel;
     private javax.swing.JLabel priorityLabel;
     private javax.swing.JLabel statusLabel;
+    private javax.swing.JTextField titleTextField;
     private javax.swing.JTextField userNameTextField;
     // End of variables declaration//GEN-END:variables
 }

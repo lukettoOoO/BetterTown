@@ -312,9 +312,9 @@ public class MainTabsUser extends javax.swing.JFrame {
     }
 }
     
-    private IssueData getIssueAtSelectedJListIndex()
+    private IssueData getIssueAtSelectedJListIndex(int index)
     {
-        int selectedIndex = issueViewList.getSelectedIndex();
+        int selectedIndex = index;
         if(selectedIndex != -1)
         {
             String selectedTitle = issueViewListModel.getElementAt(selectedIndex);
@@ -562,7 +562,7 @@ public class MainTabsUser extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mapPanelLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(mapSearchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -612,7 +612,7 @@ public class MainTabsUser extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
         jLabel2.setText("Sort by:");
 
-        feedSortComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Title", "Priority", "City", "Address", "Name", "Status" }));
+        feedSortComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascending", "Descending" }));
         feedSortComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 feedSortComboBoxActionPerformed(evt);
@@ -743,9 +743,7 @@ public class MainTabsUser extends javax.swing.JFrame {
                     .addComponent(titleLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(issueViewPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel13)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
                 .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(issueViewPanelLayout.createSequentialGroup()
@@ -760,9 +758,7 @@ public class MainTabsUser extends javax.swing.JFrame {
                                     .addComponent(cityLabel))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(issueViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(issueViewPanelLayout.createSequentialGroup()
-                                        .addComponent(jLabel17)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jLabel17)
                                     .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)))
                             .addComponent(photoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
@@ -873,13 +869,14 @@ public class MainTabsUser extends javax.swing.JFrame {
             feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(feedPanelLayout.createSequentialGroup()
                 .addGap(11, 11, 11)
-                .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(feedSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(feedSortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(reportButton)
-                    .addComponent(feedSearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(feedSearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(feedSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2)
+                        .addComponent(feedSortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(reportButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -927,7 +924,7 @@ public class MainTabsUser extends javax.swing.JFrame {
                         .addComponent(jButton4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton5)
-                        .addGap(0, 480, Short.MAX_VALUE))
+                        .addGap(0, 500, Short.MAX_VALUE))
                     .addComponent(jScrollPane2))
                 .addContainerGap())
         );
@@ -1035,7 +1032,7 @@ public class MainTabsUser extends javax.swing.JFrame {
                                 .addComponent(starButton4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(starButton5)))))
-                .addContainerGap(101, Short.MAX_VALUE))
+                .addContainerGap(121, Short.MAX_VALUE))
         );
         feedbackLabelLayout.setVerticalGroup(
             feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1378,26 +1375,38 @@ public class MainTabsUser extends javax.swing.JFrame {
         // TODO add your handling code here:
         int index = comboMapType.getSelectedIndex();
         switch (index) {
-            case 0:
-                //sortByTitle
-                break;
-            case 1:
-                //sortByPriority
-                break;
-            case 2:
-                //sortByCity
-                break;
-            case 3:
-                //sortByAddress
-                break;
-            case 4:
-                //sortByName
-                break;
-            case 5:
-                //sortByStatus
-                break;
-            default:
-                break;
+            case 0 -> {
+                for (int i = 0; i < issueViewListModel.getSize() - 1; i++) 
+                {
+                    for (int j = 0; j < issueViewListModel.getSize() - i - 1; j++) 
+                    {
+                        if (issueViewListModel.getElementAt(j).compareTo(issueViewListModel.getElementAt(j + 1)) > 0) 
+                        {
+                            String temp = issueViewListModel.getElementAt(j);
+                            issueViewListModel.setElementAt(issueViewListModel.getElementAt(j + 1), j);
+                            issueViewListModel.setElementAt(temp, j + 1);
+                        }
+                    }
+                }
+                issueViewList.setModel(issueViewListModel);
+            }
+            case 1 -> {
+                for (int i = 0; i < issueViewListModel.getSize() - 1; i++) 
+                {
+                    for (int j = 0; j < issueViewListModel.getSize() - i - 1; j++) 
+                    {
+                        if (issueViewListModel.getElementAt(j).compareTo(issueViewListModel.getElementAt(j + 1)) < 0) 
+                        {
+                            String temp = issueViewListModel.getElementAt(j);
+                            issueViewListModel.setElementAt(issueViewListModel.getElementAt(j + 1), j);
+                            issueViewListModel.setElementAt(temp, j + 1);
+                        }
+                    }
+                }
+                issueViewList.setModel(issueViewListModel);
+            }
+            default -> {
+            }
         }
     }//GEN-LAST:event_feedSortComboBoxActionPerformed
     

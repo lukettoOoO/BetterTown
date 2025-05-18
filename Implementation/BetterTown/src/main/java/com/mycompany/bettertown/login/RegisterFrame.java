@@ -10,6 +10,10 @@ import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.border.EmptyBorder;
 import org.mindrot.jbcrypt.BCrypt;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  *
@@ -360,9 +364,24 @@ public class RegisterFrame extends javax.swing.JFrame {
         
         if(error == 0)
         {
-            this.hide();
-            LoginFrame loginObj = new LoginFrame();
-            loginObj.show();
+        try (Connection conn = DatabaseLogic.getConnection()) {
+        String sql = "INSERT INTO users (name, city, email, password, status) VALUES (?, ?, ?, ?, ?)";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, name);
+        stmt.setString(2, city);
+        stmt.setString(3, email);
+        stmt.setString(4, hashedPassword); // parola hashuită
+        stmt.setString(5, status);
+
+        stmt.executeUpdate();
+
+        this.hide();
+        LoginFrame loginObj = new LoginFrame();
+        loginObj.show();
+    } catch (SQLException e) {
+        errorLabel.setText("Error saving user: " + e.getMessage());
+        e.printStackTrace();
+    }
         }
     }//GEN-LAST:event_registerButtonActionPerformed
 

@@ -1,13 +1,12 @@
 package com.mycompany.bettertown;
 
 import java.util.Date;
-import javax.swing.ImageIcon;
 
 public class IssueData
 {
     private String title;
     private String description;
-    private ImageIcon image;
+    private String photo;
     private int priority;
     private String city;
     private String address;
@@ -18,10 +17,11 @@ public class IssueData
     private double latitude;
     private double longitude;
 
-    public IssueData(String title, String description, ImageIcon photo, int priority, String city, String address, Date date, String username, String status, double latitude, double longitude) {
+    
+    public IssueData(String title, String description, String photo, int priority, String city, String address, Date date, String username, String status, double latitude, double longitude) {
         this.title = title;
         this.description = description;
-        this.image = photo;
+        this.photo = photo;
         this.priority = priority;
         this.city = city;
         this.address = address;
@@ -30,6 +30,11 @@ public class IssueData
         this.status = status;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+    
+    public IssueData()
+    {
+        //folosit pentru crearea unui obiect in database
     }
 
     public String getTitle() {
@@ -40,8 +45,8 @@ public class IssueData
         return description;
     }
 
-    public ImageIcon getImage() {
-        return image;
+    public String getPhoto() {
+        return photo;
     }
 
     public int getPriority() {
@@ -85,8 +90,8 @@ public class IssueData
         this.description = description;
     }
 
-    public void setImage(ImageIcon image) {
-        this.image = image;
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     public void setPriority(int priority) {

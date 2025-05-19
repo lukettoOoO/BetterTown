@@ -4,7 +4,6 @@
  */
 package com.mycompany.bettertown.user;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 /**
@@ -19,12 +18,6 @@ public class PhotoView extends javax.swing.JFrame {
     public PhotoView() {
         initComponents();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-    }
-    
-    public void setImage(ImageIcon img)
-    {
-        this.photoLabel.setIcon(img);
     }
 
     /**
@@ -37,23 +30,23 @@ public class PhotoView extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        photoLabel = new javax.swing.JLabel();
+        PhotoLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        photoLabel.setText("Photo");
+        PhotoLabel.setText("Photo");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(photoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
+            .addComponent(PhotoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(photoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
+            .addComponent(PhotoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -106,7 +99,7 @@ public class PhotoView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel PhotoLabel;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel photoLabel;
     // End of variables declaration//GEN-END:variables
 }

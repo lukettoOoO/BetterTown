@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.bettertown.user;
+import com.mycompany.bettertown.login.DatabaseLogic;
 
 import com.github.kevinsawicki.http.HttpRequest;
 import com.mycompany.bettertown.IssueData;
@@ -35,6 +36,8 @@ import java.util.Set;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jxmapviewer.viewer.WaypointPainter;
+import java.util.List;
+
 
 /**
  *
@@ -93,7 +96,16 @@ public class MainTabsUser extends javax.swing.JFrame {
         mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(mapViewer));
         
         //get all issue data from database
-        
+        //Bia modified here, used a method from DatabaseLogic that returns a list of all the issues 
+        //that are currently saved in the table calles issue
+        List<IssueData> savedIssues = DatabaseLogic.getAllIssues();
+
+        for (IssueData issue : savedIssues) {
+            GeoPosition pos = new GeoPosition(issue.getLatitude(), issue.getLongitude());
+            issueDataList.add(issue); // opțional, dacă vrei să le ai și în listă
+            addWaypoint(new MyWaypoint(issue, event, pos));
+        }
+        initWaypoint();
         //mouse listener for getting coordinates/ location from API and adding a waypoint:
         mapViewer.addMouseListener(new MouseAdapter(){
          @Override
@@ -112,12 +124,11 @@ public class MainTabsUser extends javax.swing.JFrame {
                         //set the correct latitude and longitude
                         issueData.setLatitude(currentLatitude);
                         issueData.setLongitude(currentLongitude);
-
-                        //add to the list
+    
+                        DatabaseLogic.saveWaypoint(issueData);
+    
                         issueDataList.add(issueData);
                         printCurrentIssues();
-
-                        //add a waypoint on the map
                         addWaypoint(new MyWaypoint(issueData, event, new GeoPosition(currentLatitude, currentLongitude)));
                         initWaypoint();
                     }

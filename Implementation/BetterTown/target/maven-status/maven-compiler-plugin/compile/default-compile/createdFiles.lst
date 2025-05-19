@@ -2,6 +2,7 @@ com/mycompany/bettertown/map/WaypointRender.class
 com/mycompany/bettertown/map/MyWaypoint.class
 com/mycompany/bettertown/login/DatabaseLogic.class
 com/mycompany/bettertown/admin/MainTabsAdmin$14.class
+com/mycompany/bettertown/user/IssueDatabase.class
 com/mycompany/bettertown/user/MainTabsUser$7.class
 com/mycompany/bettertown/login/RegisterFrame.class
 com/mycompany/bettertown/admin/MainTabsAdmin$4.class

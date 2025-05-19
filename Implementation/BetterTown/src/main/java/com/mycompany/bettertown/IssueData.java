@@ -17,6 +17,7 @@ public class IssueData
     private double latitude;
     private double longitude;
 
+    
     public IssueData(String title, String description, String photo, int priority, String city, String address, Date date, String username, String status, double latitude, double longitude) {
         this.title = title;
         this.description = description;
@@ -29,6 +30,11 @@ public class IssueData
         this.status = status;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+    
+    public IssueData()
+    {
+        //folosit pentru crearea unui obiect in database
     }
 
     public String getTitle() {

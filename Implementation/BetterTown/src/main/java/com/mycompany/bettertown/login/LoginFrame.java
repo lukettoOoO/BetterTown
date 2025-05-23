@@ -5,9 +5,15 @@
 package com.mycompany.bettertown.login;
 
 import com.mycompany.bettertown.admin.MainTabsAdmin;
+import com.mycompany.bettertown.login.DatabaseLogic;
+import com.mycompany.bettertown.login.ProfileData;
 import com.mycompany.bettertown.user.MainTabsUser;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import org.mindrot.jbcrypt.BCrypt;
@@ -243,25 +249,49 @@ public class LoginFrame extends javax.swing.JFrame {
         //verify password from database with hashed (BCrypt) password!!!
         if(error == 0)
         {
-            //update the currentProfileData variable
-            currentProfileData = new ProfileData("Luca", "city", "password", "email", "status");
-            //if there are no frame errors and no database validation errors, show the main tabs depending on the role selected
-            this.hide();
-            if(roleToLog == 1)
-            {
-                MainTabsUser mainTabsUserObj = new MainTabsUser();
-                mainTabsUserObj.setCurrentUserData(currentProfileData);
-                mainTabsUserObj.show();
-                status = "user";
+            try (Connection conn = DatabaseLogic.getConnection()) {
+            String sql = "SELECT name, city, password, status FROM users WHERE email = ? AND status = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, email);
+            String statusToFind = (roleToLog == 1) ? "user" : "admin";
+            stmt.setString(2, statusToFind);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String nameFromDb = rs.getString("name");
+                String cityFromDb = rs.getString("city");
+                String hashedPasswordFromDb = rs.getString("password");
+                String statusFromDb = rs.getString("status");
+
+                // Verifică dacă parola introdusă se potrivește cu hash-ul din baza de date
+                if (BCrypt.checkpw(password, hashedPasswordFromDb)) {
+                    currentProfileData = new ProfileData(nameFromDb, cityFromDb, "", email, statusFromDb); // Nu stoca parola nehashuită
+
+                    this.hide();
+                    if (roleToLog == 1 && statusFromDb.equals("user")) {
+                        MainTabsUser mainTabsUserObj = new MainTabsUser();
+                        mainTabsUserObj.setCurrentUserData(currentProfileData);
+                        mainTabsUserObj.show();
+                    } else if (roleToLog == 2 && statusFromDb.equals("admin")) {
+                        MainTabsAdmin mainTabsAdminObj = new MainTabsAdmin();
+                        mainTabsAdminObj.setCurrentAdminData(currentProfileData);
+                        mainTabsAdminObj.show();
+                    } else {
+                        errorLabel.setText("Invalid role for this user!");
+                    }
+                } else {
+                    errorLabel.setText("Incorrect password!");
+                }
+                            } else {
+                errorLabel.setText("User not found with this email and role!");
             }
-            else if(roleToLog == 2)
-            {
-                MainTabsAdmin mainTabsAdminObj = new MainTabsAdmin();
-                mainTabsAdminObj.setCurrentAdminData(currentProfileData);
-                mainTabsAdminObj.show();
-                status = "admin";
-            }
+
+        } catch (SQLException e) {
+            errorLabel.setText("Database error: " + e.getMessage());
+            e.printStackTrace();
         }
+    }
+        
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void userRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userRadioButtonActionPerformed

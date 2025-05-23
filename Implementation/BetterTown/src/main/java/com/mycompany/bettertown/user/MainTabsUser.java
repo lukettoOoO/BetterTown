@@ -6,6 +6,7 @@ package com.mycompany.bettertown.user;
 
 import com.github.kevinsawicki.http.HttpRequest;
 import com.mycompany.bettertown.IssueData;
+import com.mycompany.bettertown.login.DatabaseLogic;
 import com.mycompany.bettertown.login.LoginFrame;
 import com.mycompany.bettertown.login.LogoutConfirmationFrame;
 import com.mycompany.bettertown.login.LogoutListener;
@@ -33,6 +34,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,13 +69,14 @@ public class MainTabsUser extends javax.swing.JFrame {
         logoLabel.setIcon(logoIcon);
         setLocationRelativeTo(null);
         
+        issueViewListModel = new DefaultListModel<>();
+        issueViewList.setModel(issueViewListModel);
+        
         initMap();
         initButtons();
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        issueViewListModel = new DefaultListModel<>();
-        issueViewList.setModel(issueViewListModel);
         
         if(statusLabel.getText().equals("Not resolved"))
         {
@@ -104,15 +107,23 @@ public class MainTabsUser extends javax.swing.JFrame {
         mapPanelSecondary.add(mapViewer, BorderLayout.CENTER);
         mapPanelSecondary.setLayout(new java.awt.BorderLayout());
         mapPanelSecondary.add(mapViewer, java.awt.BorderLayout.CENTER);
-        
+        event = getEvent();
         //mouse move:
         MouseInputListener mouseMove = new PanMouseInputListener(mapViewer);
         mapViewer.addMouseListener(mouseMove);
         mapViewer.addMouseMotionListener(mouseMove);
         mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(mapViewer));
         
-        //get all issue data from database
-        
+        //get all issue data from DATABASE
+        List<IssueData> savedIssues = DatabaseLogic.getAllIssues();
+
+        for (IssueData issue : savedIssues) {
+            GeoPosition pos = new GeoPosition(issue.getLatitude(), issue.getLongitude());
+            issueDataList.add(issue);
+            issueViewListModel.addElement(issue.getTitle());
+            addWaypoint(new MyWaypoint(issue, event, pos));
+        }
+        initWaypoint();
         //mouse listener for getting coordinates/ location from API and adding a waypoint:
         mapViewer.addMouseListener(new MouseAdapter(){
          @Override
@@ -131,12 +142,14 @@ public class MainTabsUser extends javax.swing.JFrame {
                         //set the correct latitude and longitude
                         issueData.setLatitude(currentLatitude);
                         issueData.setLongitude(currentLongitude);
-
+                        
+                        
+                        
                         //add to the list and to feed
                         issueDataList.add(issueData); //add in the issue array list
                         issueViewListModel.addElement(issueData.getTitle()); //add the title of the issue in the feed issue lis
                         printCurrentIssues();
-
+                        DatabaseLogic.saveWaypoint(issueData);
                         //add a waypoint on the map
                         addWaypoint(new MyWaypoint(issueData, event, new GeoPosition(currentLatitude, currentLongitude)));
                         initWaypoint();
@@ -150,7 +163,7 @@ public class MainTabsUser extends javax.swing.JFrame {
         }
         });
         
-        event = getEvent();
+        
         
     }
     
@@ -1141,6 +1154,7 @@ public class MainTabsUser extends javax.swing.JFrame {
 
     private void upButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upButtonActionPerformed
         // TODO add your handling code here:
+        //get database up to date
         int selectedIndex = issueViewList.getSelectedIndex();
         if(selectedIndex != -1)
         {

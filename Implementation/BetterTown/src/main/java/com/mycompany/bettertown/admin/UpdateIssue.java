@@ -33,6 +33,7 @@ public class UpdateIssue extends javax.swing.JFrame {
     private boolean photoUploaded;
     private double latitude;
     private double longitude;
+    private int id;
     private Date date;
 
     
@@ -87,7 +88,7 @@ public class UpdateIssue extends javax.swing.JFrame {
                 else
                 {
                     IssueData newIssue = new IssueData(title, description, image, Integer.parseInt(priority), city, address, date, userName, status, latitude, longitude);
-                
+                    newIssue.setId(id);
                     if(listener != null)
                     {
                         listener.onIssueAdded(newIssue);
@@ -456,6 +457,11 @@ public class UpdateIssue extends javax.swing.JFrame {
             return "";
         }
     }
+     
+     public void setId(int id)
+     {
+     this.id=id;
+     }
     
     public void setCity(String city)
     {

@@ -5,6 +5,7 @@ import javax.swing.ImageIcon;
 
 public class IssueData
 {
+    private int id;
     private String title;
     private String description;
     private ImageIcon image;
@@ -17,8 +18,12 @@ public class IssueData
     
     private double latitude;
     private double longitude;
-
+    public IssueData()
+    {
+        
+    }
     public IssueData(String title, String description, ImageIcon photo, int priority, String city, String address, Date date, String username, String status, double latitude, double longitude) {
+        
         this.title = title;
         this.description = description;
         this.image = photo;
@@ -32,6 +37,10 @@ public class IssueData
         this.longitude = longitude;
     }
 
+    public int getId() {
+    return id;
+    }
+    
     public String getTitle() {
         return title;
     }
@@ -76,6 +85,9 @@ public class IssueData
         return latitude;
     }
 
+    public void setId(int id) {
+    this.id = id;
+}
     
     public void setTitle(String title) {
         this.title = title;

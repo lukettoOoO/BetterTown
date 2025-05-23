@@ -6,6 +6,7 @@ package com.mycompany.bettertown.admin;
 
 import com.github.kevinsawicki.http.HttpRequest;
 import com.mycompany.bettertown.IssueData;
+import com.mycompany.bettertown.login.DatabaseLogic;
 import com.mycompany.bettertown.login.LogoutConfirmationFrame;
 import com.mycompany.bettertown.login.LogoutListener;
 import com.mycompany.bettertown.login.ProfileData;
@@ -21,6 +22,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -66,13 +68,13 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         this.logoIcon = new ImageIcon("logo.png");
         logoLabel.setIcon(logoIcon);
         setLocationRelativeTo(null);
-        
+        issueViewListModel = new DefaultListModel<>();
         initMap();
         initButtons();
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-       issueViewListModel = new DefaultListModel<>();
+      // issueViewListModel = new DefaultListModel<>();
        issueViewList.setModel(issueViewListModel);
        
        if(statusLabel.getText().equals("Not resolved"))
@@ -105,13 +107,20 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         mapPanelSecondary.add(mapViewer, BorderLayout.CENTER);
         mapPanelSecondary.setLayout(new java.awt.BorderLayout());
         mapPanelSecondary.add(mapViewer, java.awt.BorderLayout.CENTER);
-        
+        event = getEvent();
         //mouse move:
         MouseInputListener mouseMove = new PanMouseInputListener(mapViewer);
         mapViewer.addMouseListener(mouseMove);
         mapViewer.addMouseMotionListener(mouseMove);
         mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(mapViewer));
-        
+        List<IssueData> savedIssues = DatabaseLogic.getAllIssues();
+        for (IssueData issue : savedIssues) {
+            GeoPosition pos = new GeoPosition(issue.getLatitude(), issue.getLongitude());
+            issueDataList.add(issue);
+            issueViewListModel.addElement(issue.getTitle());
+            addWaypoint(new MyWaypoint(issue, event, pos));
+        }
+        initWaypoint();
         //mouse listener for getting coordinates and adding a waypoint:
         mapViewer.addMouseListener(new MouseAdapter(){
          @Override
@@ -130,13 +139,14 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                         // Set the correct latitude and longitude
                         issueData.setLatitude(currentLatitude);
                         issueData.setLongitude(currentLongitude);
-
+                        //issueData.setId(currentId);
                         // Add to the issue list
                         issueDataList.add(issueData);
                         issueViewListModel.addElement(issueData.getTitle()); //add the title of the issue in the feed issue list
                         printCurrentIssues();
-
+                        DatabaseLogic.saveWaypoint(issueData);
                         // Add a waypoint to the map
+                        System.out.println(issueData.getId());
                         //each waypoint has the issueData attribute, this is crucial for finding it in the feed
                         addWaypoint(new MyWaypoint(issueData, event, new GeoPosition(currentLatitude, currentLongitude)));
                         initWaypoint();
@@ -150,7 +160,6 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         }
         }); 
         
-        event = getEvent();
     }
     
     private void initWaypoint()
@@ -279,6 +288,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         System.out.println("CURRENT ISSUES:");
         for (IssueData issue : issueDataList) 
         {
+            System.out.println("Id: " + issue.getId());
             System.out.println("Title: " + issue.getTitle());
             System.out.println("Description: " + issue.getDescription());
             System.out.println("City: " + issue.getCity());
@@ -1235,6 +1245,8 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                     int currentPriority = issue.getPriority();
                     currentPriority++;
                     issue.setPriority(currentPriority);
+                    //Merge direct cu update
+                    DatabaseLogic.updateWaypoint(issue);
                     this.upButton.setEnabled(false);
                     this.downButton.setEnabled(true);
                     this.priorityLabel.setText(String.valueOf(issue.getPriority()));
@@ -1257,6 +1269,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                     int currentPriority = issue.getPriority();
                     currentPriority--;
                     issue.setPriority(currentPriority);
+                    DatabaseLogic.updateWaypoint(issue);
                     this.upButton.setEnabled(true);
                     this.downButton.setEnabled(false);
                     this.priorityLabel.setText(String.valueOf(issue.getPriority()));
@@ -1332,6 +1345,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         // TODO add your handling code here:
+        //UPDATE WITH DATABASE
         int selectedIndex = issueViewList.getSelectedIndex();
         UpdateIssue updateIssueForm = new UpdateIssue(new AddIssueListener() {
                     @Override
@@ -1345,9 +1359,14 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                             }
                         }
                         initWaypoint();
+                        
                         issueDataList.set(selectedIndex, issueData);
+                        DatabaseLogic.updateWaypoint(issueData);
+
                         issueViewListModel.setElementAt(issueData.getTitle(), selectedIndex);
                         printCurrentIssues();
+                        //save in database
+                        
                         if(selectedIndex != -1)
                         {
                             String selectedTitle = issueViewListModel.getElementAt(selectedIndex);
@@ -1369,10 +1388,15 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                                     break;
                                 }
                             }
+                            
                         }
+                        
                     }
+                    
                 });
+        
         IssueData selectedIssue = issueDataList.get(selectedIndex);
+        updateIssueForm.setId(selectedIssue.getId());
         updateIssueForm.setTitle(selectedIssue.getTitle());
         updateIssueForm.setDescription(selectedIssue.getDescription());
         updateIssueForm.setCity(selectedIssue.getCity());
@@ -1398,9 +1422,11 @@ public class MainTabsAdmin extends javax.swing.JFrame {
             }
         }
         int selectedIndex = issueViewList.getSelectedIndex();
+         DatabaseLogic.deleteIssue(issueDataList.get(selectedIndex));
         issueDataList.remove(issueViewList.getSelectedIndex());
         issueViewListModel.removeElementAt(issueViewList.getSelectedIndex());
         initWaypoint();
+        //remove from database
         if(issueViewListModel.getSize() >= 1)
         {
             issueViewList.setSelectedIndex(selectedIndex - 1);

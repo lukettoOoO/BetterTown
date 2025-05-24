@@ -7,7 +7,9 @@ package com.mycompany.bettertown.login;
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
@@ -365,7 +367,7 @@ public class RegisterFrame extends javax.swing.JFrame {
         {
             try (Connection conn = DatabaseLogic.getConnection()) {
         String sql = "INSERT INTO users (name, city, email, password, status) VALUES (?, ?, ?, ?, ?)";
-        PreparedStatement stmt = conn.prepareStatement(sql);
+        PreparedStatement stmt = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
         stmt.setString(1, name);
         stmt.setString(2, city);
         stmt.setString(3, email);
@@ -373,7 +375,15 @@ public class RegisterFrame extends javax.swing.JFrame {
         stmt.setString(5, status);
 
         stmt.executeUpdate();
-
+        ResultSet rs = stmt.getGeneratedKeys();
+        System.out.println("Generated keys: " + rs);
+        if (rs.next()) {
+            int generatedId = rs.getInt(1);
+            profileObj.setId(generatedId);
+            System.out.println("Generated ID: " + generatedId);
+        } else {
+            System.out.println("No generated keys found.");
+        }
         this.hide();
         LoginFrame loginObj = new LoginFrame();
         loginObj.show();

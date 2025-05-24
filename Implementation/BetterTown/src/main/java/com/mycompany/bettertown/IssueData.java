@@ -18,6 +18,7 @@ public class IssueData
     
     private double latitude;
     private double longitude;
+    //am avut nevoie de un constructor gol:)
     public IssueData()
     {
         
@@ -37,6 +38,7 @@ public class IssueData
         this.longitude = longitude;
     }
 
+    //Adaugat get si set pentru id (primary key in tabel)
     public int getId() {
     return id;
     }

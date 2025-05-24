@@ -62,6 +62,8 @@ public class MainTabsUser extends javax.swing.JFrame {
     private EventWaypoint event;
     private ProfileData currentUserData;
     
+    
+    
     public MainTabsUser() {
         initComponents();
         
@@ -1166,6 +1168,7 @@ public class MainTabsUser extends javax.swing.JFrame {
                     int currentPriority = issue.getPriority();
                     currentPriority++;
                     issue.setPriority(currentPriority);
+                    DatabaseLogic.updateWaypoint(issue);
                     this.upButton.setEnabled(false);
                     this.downButton.setEnabled(true);
                     this.priorityLabel.setText(String.valueOf(issue.getPriority()));
@@ -1202,6 +1205,14 @@ public class MainTabsUser extends javax.swing.JFrame {
     private void commentsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commentsButtonActionPerformed
         // TODO add your handling code here:
         CommentUserFrame commentObj = new CommentUserFrame();
+        System.out.println("Name of the user: "+currentUserData.getName()+" "+currentUserData.getId());
+        commentObj.setLoggedInUser(currentUserData);
+        int index = issueViewList.getSelectedIndex();
+        IssueData selectedIssue=issueDataList.get(index);
+        System.out.println(selectedIssue.getTitle());
+        commentObj.setCurrentIssue(selectedIssue);
+        commentObj.loadComments(selectedIssue);
+        //commentObj.setCurrentIssue(selectedIssue);
         commentObj.show();
     }//GEN-LAST:event_commentsButtonActionPerformed
 
@@ -1360,6 +1371,7 @@ public class MainTabsUser extends javax.swing.JFrame {
                     int currentPriority = issue.getPriority();
                     currentPriority--;
                     issue.setPriority(currentPriority);
+                    DatabaseLogic.updateWaypoint(issue);
                     this.upButton.setEnabled(true);
                     this.downButton.setEnabled(false);
                     this.priorityLabel.setText(String.valueOf(issue.getPriority()));

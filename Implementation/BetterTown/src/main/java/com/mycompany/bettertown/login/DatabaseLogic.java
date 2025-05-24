@@ -4,6 +4,8 @@ package com.mycompany.bettertown.login;
 import static com.mycompany.bettertown.ImageConverter.byteArrayToImageIcon;
 import static com.mycompany.bettertown.ImageConverter.imageIconToByteArray;
 import com.mycompany.bettertown.IssueData;
+import static com.mycompany.bettertown.login.DatabaseLogic.getConnection;
+import com.mycompany.bettertown.user.Comment;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.sql.Statement;
 import javax.swing.ImageIcon;
+import java.time.LocalDateTime;
 
 public class DatabaseLogic {
     private static final String URL = "jdbc:mysql://localhost:3306/BetterTown";
@@ -24,19 +27,26 @@ public class DatabaseLogic {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 //this is for register with database
-    public static ProfileData getUserByEmailAndStatus(Connection conn, String email, String status) throws SQLException {
-        String sql = "SELECT name, city, password, status FROM users WHERE email = ? AND status = ?";
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(1, email);
-        stmt.setString(2, status);
-        ResultSet rs = stmt.executeQuery();
+  public static ProfileData getUserByEmailAndStatus(Connection conn, String email, String status) throws SQLException {
+    String sql = "SELECT id, name, city, password, status FROM users WHERE email = ? AND status = ?";
+    PreparedStatement stmt = conn.prepareStatement(sql);
+    stmt.setString(1, email);
+    stmt.setString(2, status);
+    ResultSet rs = stmt.executeQuery();
 
-        if (rs.next()) {
-            return new ProfileData(rs.getString("name"), rs.getString("city"), rs.getString("password"), email, rs.getString("status"));
-        }
-        return null;
+    if (rs.next()) {
+        ProfileData user = new ProfileData(
+            rs.getString("name"),
+            rs.getString("city"),
+            rs.getString("password"),
+            email,
+            rs.getString("status")
+        );
+        user.setId(rs.getInt("id")); // Ai nevoie de acest setter în clasă
+        return user;
     }
-    
+    return null;
+}
     public static void saveWaypoint(IssueData data) {
     String sql = "INSERT INTO issue (title, description, image_data, priority, city, address, date, username, status, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -136,6 +146,7 @@ public class DatabaseLogic {
 
     
     public static void updateWaypoint(IssueData data) {
+    //Pentru update in MainTabsAdmin si priority vote buttons
     String sql = "UPDATE issue SET title = ?, description = ?, image_data = ?, priority = ?, city = ?, address = ?, date = ?, username = ?, status = ?, latitude = ?, longitude = ? WHERE id = ?";
 
     try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -173,4 +184,82 @@ public class DatabaseLogic {
         e.printStackTrace();
     }
 }
+    
+    public static List<Comment> getCommentForIssue(IssueData data)
+    {
+    List<Comment> comments=new ArrayList<>();
+    //Se selecteaza din tabel comentariile cu id-ul pentru issue ordonate descrescator dupa data
+    String sql="SELECT * From comments where issue_id = ? ORDER BY date DESC";
+    try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql))
+        {
+        stmt.setInt(1,data.getId());
+        ResultSet rs=stmt.executeQuery();
+        while(rs.next())
+        {
+            Comment comment=new Comment();
+            comment.setId(rs.getInt("id"));
+            comment.setIssueId(rs.getInt("issue_id"));
+            comment.setTitle(rs.getString("title"));
+            comment.setUserId(rs.getInt("user_id"));
+            comment.setDate(rs.getDate("date"));
+            comment.setContent(rs.getString("content"));
+
+            comments.add(comment);
+        }
+    }
+    catch (SQLException e){
+    e.printStackTrace();
+    }
+    return comments;
+    }
+    
+    public static void addComment(Comment comment)
+    {
+    String sql = "INSERT INTO comments (issue_id,title,user_id,date,content) VALUES (?, ?, ?, ?, ?)";
+    
+    try (Connection conn=getConnection(); PreparedStatement stmt=conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS))
+    {
+        stmt.setInt(1,comment.getIssueId());
+        stmt.setString(2,comment.getTitle());
+        stmt.setInt(3,comment.getUserId());
+        stmt.setTimestamp(4,new java.sql.Timestamp(comment.getDate().getTime()));
+        stmt.setString(5,comment.getContent());
+        
+        stmt.execute();
+        ResultSet rs=stmt.getGeneratedKeys();
+        if(rs.next())
+        {
+        int generatedId=rs.getInt(1);
+        comment.setId(generatedId);
+        }
+        else
+        {
+        System.out.println("No id generated");
+        }
+    
+    }catch (SQLException e){
+        e.printStackTrace();
+    }
+    }
+    
+    public static ProfileData getUserById(int userId) {
+    String sql = "SELECT id, name, city, email, password, status FROM users WHERE id = ?";
+    try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, userId);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return new ProfileData(
+                rs.getString("name"),
+                rs.getString("city"),
+                rs.getString("password"),
+                rs.getString("email"),
+                rs.getString("status")
+            );
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+
 }

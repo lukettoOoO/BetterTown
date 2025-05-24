@@ -250,7 +250,7 @@ public class LoginFrame extends javax.swing.JFrame {
         if(error == 0)
         {
             try (Connection conn = DatabaseLogic.getConnection()) {
-            String sql = "SELECT name, city, password, status FROM users WHERE email = ? AND status = ?";
+            String sql = "SELECT id,name, city, password, status FROM users WHERE email = ? AND status = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, email);
             String statusToFind = (roleToLog == 1) ? "user" : "admin";
@@ -258,6 +258,7 @@ public class LoginFrame extends javax.swing.JFrame {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                int idFromDb=rs.getInt("id");
                 String nameFromDb = rs.getString("name");
                 String cityFromDb = rs.getString("city");
                 String hashedPasswordFromDb = rs.getString("password");
@@ -266,10 +267,12 @@ public class LoginFrame extends javax.swing.JFrame {
                 // Verifică dacă parola introdusă se potrivește cu hash-ul din baza de date
                 if (BCrypt.checkpw(password, hashedPasswordFromDb)) {
                     currentProfileData = new ProfileData(nameFromDb, cityFromDb, "", email, statusFromDb); // Nu stoca parola nehashuită
-
+                    currentProfileData.setId(idFromDb);
                     this.hide();
                     if (roleToLog == 1 && statusFromDb.equals("user")) {
+                        System.out.println("La login: "+currentProfileData.getId());
                         MainTabsUser mainTabsUserObj = new MainTabsUser();
+                        
                         mainTabsUserObj.setCurrentUserData(currentProfileData);
                         mainTabsUserObj.show();
                     } else if (roleToLog == 2 && statusFromDb.equals("admin")) {

@@ -263,21 +263,24 @@ public class LoginFrame extends javax.swing.JFrame {
                 String cityFromDb = rs.getString("city");
                 String hashedPasswordFromDb = rs.getString("password");
                 String statusFromDb = rs.getString("status");
-
+                
                 // Verifică dacă parola introdusă se potrivește cu hash-ul din baza de date
                 if (BCrypt.checkpw(password, hashedPasswordFromDb)) {
                     currentProfileData = new ProfileData(nameFromDb, cityFromDb, "", email, statusFromDb); // Nu stoca parola nehashuită
                     currentProfileData.setId(idFromDb);
+                    
                     this.hide();
                     if (roleToLog == 1 && statusFromDb.equals("user")) {
                         System.out.println("La login: "+currentProfileData.getId());
                         MainTabsUser mainTabsUserObj = new MainTabsUser();
-                        
+                        mainTabsUserObj.initAlerts(currentProfileData);
                         mainTabsUserObj.setCurrentUserData(currentProfileData);
                         mainTabsUserObj.show();
-                    } else if (roleToLog == 2 && statusFromDb.equals("admin")) {
+                    } else if (roleToLog == 2) {
+                        System.out.println(currentProfileData.getName());
                         MainTabsAdmin mainTabsAdminObj = new MainTabsAdmin();
                         mainTabsAdminObj.setCurrentAdminData(currentProfileData);
+                        mainTabsAdminObj.initAlerts(currentProfileData);
                         mainTabsAdminObj.show();
                     } else {
                         errorLabel.setText("Invalid role for this user!");

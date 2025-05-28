@@ -1,6 +1,8 @@
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/BetterTown.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/ImageConverter.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/IssueData.java
+/Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/Alerts.java
+/Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/AlertsAdmin.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/Comment.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/CommentAdminFrame.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/MainTabsAdmin.java
@@ -18,7 +20,9 @@
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/map/WaypointRender.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/user/AddIssue.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/user/AddIssueListener.java
+/Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/user/Alerts.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/user/Comment.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/user/CommentUserFrame.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/user/MainTabsUser.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/user/PhotoView.java
+/Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/user/UserAlerts.java

@@ -18,6 +18,10 @@ public class ProfileData
         this.email = email;
         this.status = status;
     }
+    public ProfileData()
+    {
+    
+    }
     public int getId()
     {
     return id;

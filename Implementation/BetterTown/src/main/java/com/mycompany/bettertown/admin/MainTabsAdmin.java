@@ -61,7 +61,10 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private DefaultListModel<String> issueViewListModel; //this is necessary for displaying the title of issues in the issue list JList in the feed
     private EventWaypoint event;
     private ProfileData currentAdminData;
-    
+    private List<Alerts> alerts=new ArrayList<Alerts>();
+    private DefaultListModel<String> alertsViewListModel;
+   
+   
     public MainTabsAdmin() {
         initComponents();
         
@@ -71,6 +74,8 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         issueViewListModel = new DefaultListModel<>();
         initMap();
         initButtons();
+        
+       
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -91,6 +96,13 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         }
         
     }
+     public void setCurrentAdminData(ProfileData profileData)
+    {
+        this.currentAdminData = profileData;
+        System.out.println("In tabs: "+currentAdminData.getName());
+    }
+     
+     
     
     private void initMap()
     {
@@ -160,6 +172,19 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         }
         }); 
         
+    }
+    
+    public void initAlerts(ProfileData currentAdminData)
+    {
+        System.out.println(currentAdminData.getName());
+        alerts=DatabaseLogic.getAllAlertsFromDatabase(currentAdminData);
+        alertsViewListModel = new DefaultListModel<>();
+        for(Alerts a : alerts)
+        {
+            alertsViewListModel.addElement(a.getText());
+        }
+        AlertList.setModel(alertsViewListModel);
+        System.out.println("Loaded alerts: "+ alerts.size());
     }
     
     private void initWaypoint()
@@ -273,11 +298,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     return city;
 }
   
-    public void setCurrentAdminData(ProfileData profileData)
-    {
-        this.currentAdminData = profileData;
-    }
-    
+   
     private void printCurrentIssues()
     {
         if (issueDataList.isEmpty()) 
@@ -427,10 +448,10 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         updateButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
         alertsLabel = new javax.swing.JPanel();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        DeleteAllAlertsButton = new javax.swing.JButton();
+        DeleteAlertButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
+        AlertList = new javax.swing.JList<>();
         feedbackLabel = new javax.swing.JPanel();
         jSeparator2 = new javax.swing.JSeparator();
         StatisticsLabel = new javax.swing.JLabel();
@@ -930,19 +951,29 @@ public class MainTabsAdmin extends javax.swing.JFrame {
 
         alertsLabel.setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton4.setText("Select All");
+        DeleteAllAlertsButton.setText("Delete All");
+        DeleteAllAlertsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteAllAlertsButtonActionPerformed(evt);
+            }
+        });
 
-        jButton5.setText("Delete");
-        jButton5.setToolTipText("");
+        DeleteAlertButton.setText("Delete");
+        DeleteAlertButton.setToolTipText("");
+        DeleteAlertButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteAlertButtonActionPerformed(evt);
+            }
+        });
 
-        jList2.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 204, 255), 1, true), "Alert List", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font(".AppleSystemUIFont", 0, 24), new java.awt.Color(51, 204, 255))); // NOI18N
-        jList2.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 14)); // NOI18N
-        jList2.setModel(new javax.swing.AbstractListModel<String>() {
+        AlertList.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 204, 255), 1, true), "Alert List", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font(".AppleSystemUIFont", 0, 24), new java.awt.Color(51, 204, 255))); // NOI18N
+        AlertList.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 14)); // NOI18N
+        AlertList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "6", "7", "3", "2", "3", "4", "5", "32", "2", "1", "1", "34", "ef", "ewf", "a", "edf", "awr", "g", "erg", "er", "hg", "ert", "h", "eth", "etherg", "a", "reg", "reg", "arg", " " };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane2.setViewportView(jList2);
+        jScrollPane2.setViewportView(AlertList);
 
         javax.swing.GroupLayout alertsLabelLayout = new javax.swing.GroupLayout(alertsLabel);
         alertsLabel.setLayout(alertsLabelLayout);
@@ -952,10 +983,10 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(alertsLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(alertsLabelLayout.createSequentialGroup()
-                        .addComponent(jButton4)
+                        .addComponent(DeleteAllAlertsButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5)
-                        .addGap(0, 500, Short.MAX_VALUE))
+                        .addComponent(DeleteAlertButton)
+                        .addGap(0, 499, Short.MAX_VALUE))
                     .addComponent(jScrollPane2))
                 .addContainerGap())
         );
@@ -966,8 +997,8 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(alertsLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton5)
-                    .addComponent(jButton4))
+                    .addComponent(DeleteAlertButton)
+                    .addComponent(DeleteAllAlertsButton))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
@@ -1113,7 +1144,11 @@ public class MainTabsAdmin extends javax.swing.JFrame {
 
     private void alertsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alertsButtonActionPerformed
         // TODO add your handling code here:
+        //initAlerts();
+        
+        System.out.println("Alert button performed");
         tabbedPane.setSelectedIndex(2);
+        
     }//GEN-LAST:event_alertsButtonActionPerformed
 
     private void managerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_managerButtonActionPerformed
@@ -1360,6 +1395,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
         //UPDATE WITH DATABASE
         int selectedIndex = issueViewList.getSelectedIndex();
+        String statusBefore=issueDataList.get(selectedIndex).getStatus();
         UpdateIssue updateIssueForm = new UpdateIssue(new AddIssueListener() {
                     @Override
                     public void onIssueAdded(IssueData issueData) { //when confirm button has been pressed in update issue form
@@ -1374,8 +1410,17 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                         initWaypoint();
                         
                         issueDataList.set(selectedIndex, issueData);
+                        String statusAfter=issueDataList.get(selectedIndex).getStatus();
                         DatabaseLogic.updateWaypoint(issueData);
-
+                        if(!statusBefore.equals(statusAfter))
+                        {
+                            Alerts alert=new Alerts();
+                            alert.setUserId(currentAdminData.getId());
+                            String text="Issue: "+issueDataList.get(selectedIndex).getTitle()+" has chandeg its status to '"+statusAfter+"'";
+                            alert.setText(text);
+                            DatabaseLogic.addAlert(alert);
+                            initAlerts(currentAdminData);
+                        }
                         issueViewListModel.setElementAt(issueData.getTitle(), selectedIndex);
                         printCurrentIssues();
                         //save in database
@@ -1462,6 +1507,23 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private void BlockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BlockButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_BlockButtonActionPerformed
+
+    private void DeleteAlertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteAlertButtonActionPerformed
+        // TODO add your handling code here:
+        //System.out.println(currentAdminData.getId());
+        int selectedIndex=AlertList.getSelectedIndex();
+        
+        DatabaseLogic.deleteAlert(currentAdminData, alerts.get(selectedIndex));
+        alerts.remove(AlertList.getSelectedIndex());
+        alertsViewListModel.removeElementAt(AlertList.getSelectedIndex());
+        initAlerts(currentAdminData);
+    }//GEN-LAST:event_DeleteAlertButtonActionPerformed
+
+    private void DeleteAllAlertsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteAllAlertsButtonActionPerformed
+        // TODO add your handling code here:
+        DatabaseLogic.deleteAllAlerts(currentAdminData);
+        initAlerts(currentAdminData);
+    }//GEN-LAST:event_DeleteAllAlertsButtonActionPerformed
     
     /**
      * @param args the command line arguments
@@ -1502,7 +1564,10 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList<String> AlertList;
     private javax.swing.JButton BlockButton;
+    private javax.swing.JButton DeleteAlertButton;
+    private javax.swing.JButton DeleteAllAlertsButton;
     private javax.swing.JButton DeleteButton;
     private javax.swing.JButton EditButton;
     private javax.swing.JLabel FeedbackLabel;
@@ -1530,8 +1595,6 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private javax.swing.JPanel feedbackLabel;
     private javax.swing.JList<String> issueViewList;
     private javax.swing.JPanel issueViewPanel;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -1545,7 +1608,6 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JList<String> jList2;
     private javax.swing.JList<String> jList3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

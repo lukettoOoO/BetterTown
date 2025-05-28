@@ -4,6 +4,8 @@ package com.mycompany.bettertown.login;
 import static com.mycompany.bettertown.ImageConverter.byteArrayToImageIcon;
 import static com.mycompany.bettertown.ImageConverter.imageIconToByteArray;
 import com.mycompany.bettertown.IssueData;
+import com.mycompany.bettertown.admin.Alerts;
+
 import static com.mycompany.bettertown.login.DatabaseLogic.getConnection;
 import com.mycompany.bettertown.user.Comment;
 import java.io.IOException;
@@ -261,5 +263,106 @@ public class DatabaseLogic {
     }
     return null;
 }
+    
+    public static List<ProfileData> getAllUsers()
+    {
+        List<ProfileData> users=new ArrayList<>();
+        String sql="SELECT * FROM users";
+        try (Connection conn=getConnection(); PreparedStatement stmt=conn.prepareStatement(sql))
+        {
+            ResultSet rs=stmt.executeQuery();
+            while(rs.next())
+            {
+                ProfileData user=new ProfileData();
+                user.setId(rs.getInt("id"));
+                user.setName(rs.getString("name"));
+                user.setCity(rs.getString("city"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                users.add(user);
+                
+            }
+        } catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return users;
+    }
+    public static void addAlert(Alerts alert)
+    {
+        String sql="INSERT INTO alerts (user_id, text) VALUES (?,?)";
+        int i=0;
+        try (Connection conn=getConnection(); PreparedStatement stmt=conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS))
+        {   List <ProfileData> users=getAllUsers();
+        
+            for(ProfileData u:users)
+            {
+            stmt.setInt(1,u.getId());
+            stmt.setString(2,alert.getText());
+            i++;
+            if(i>10)
+                break;
+            stmt.execute();
+            ResultSet rs=stmt.getGeneratedKeys();
+            if(rs.next())
+            {
+                int generatedId=rs.getInt(1);
+                alert.setId(generatedId);
+            }
+            else
+            {
+                System.out.println("No id generated for alert");
+            }
+            }
+            
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    public static List<Alerts> getAllAlertsFromDatabase(ProfileData user)
+    {
+        List<Alerts> alerts=new ArrayList<>();
+        String sql="SELECT * FROM alerts WHERE user_id=? ORDER BY id DESC";
+        try (Connection conn = getConnection(); PreparedStatement stmt=conn.prepareStatement(sql))
+        {
+            stmt.setInt(1, user.getId());
+            ResultSet rs=stmt.executeQuery();
+            while(rs.next())
+            {
+                Alerts alert=new Alerts();
+                alert.setId(rs.getInt("id"));
+                alert.setText(rs.getString("text"));
+                alerts.add(alert);
+            }
+        }catch (SQLException e){
+                e.printStackTrace();
+         }
+         return alerts;       
+    }
+    
+     public static void deleteAlert(ProfileData user,Alerts alert) {
+    String sql = "DELETE FROM alerts WHERE id = ? AND user_id=?";
 
+    try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        
+        stmt.setInt(1, alert.getId());
+        stmt.setInt(2,user.getId());
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+     }
+     
+     public static void deleteAllAlerts(ProfileData user)
+     {
+     String sql = "DELETE FROM alerts where id>=0 and user_id=?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1,user.getId());
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+     }
 }

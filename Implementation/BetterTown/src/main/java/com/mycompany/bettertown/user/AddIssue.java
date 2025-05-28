@@ -80,7 +80,7 @@ public class AddIssue extends javax.swing.JFrame {
                 }
                 else
                 {
-                    IssueData newIssue = new IssueData(title, description, image, Integer.parseInt(priority), city, address, new java.util.Date(), userName, status, 0.0, 0.0);
+                    IssueData newIssue = new IssueData(title, description, image, Integer.parseInt(priority), city, address, LocalDateTime.now(), userName, status, 0.0, 0.0);
                 
                     if(listener != null)
                     {

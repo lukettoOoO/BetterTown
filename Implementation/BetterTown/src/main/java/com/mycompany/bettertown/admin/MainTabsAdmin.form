@@ -150,7 +150,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                       <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="77" max="32767" attributes="0"/>
+                      <EmptySpace pref="79" max="32767" attributes="0"/>
                       <Component id="jScrollPane6" min="-2" pref="117" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="mapSearchButton" min="-2" pref="23" max="-2" attributes="0"/>
@@ -858,7 +858,7 @@
                               <Component id="DeleteAllAlertsButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="DeleteAlertButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="499" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="501" max="32767" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
                       </Group>
@@ -997,7 +997,7 @@
                               <Component id="StatisticsLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="ViewStatisticsButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
                               <Component id="FeedbackLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="ViewFeedbackButton" min="-2" max="-2" attributes="0"/>
@@ -1021,7 +1021,7 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="132" max="32767" attributes="0"/>
+                      <EmptySpace pref="154" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1079,6 +1079,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="View Statistics"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ViewStatisticsButtonActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="ManageAccountsLabel">
               <Properties>
@@ -1205,6 +1208,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="View Feedback"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ViewFeedbackButtonActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

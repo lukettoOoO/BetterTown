@@ -34,7 +34,7 @@ public class UpdateIssue extends javax.swing.JFrame {
     private double latitude;
     private double longitude;
     private int id;
-    private Date date;
+    private LocalDateTime date;
 
     
     public UpdateIssue(AddIssueListener listener) {
@@ -488,7 +488,7 @@ public class UpdateIssue extends javax.swing.JFrame {
         titleTextField.setText(title);
     }
     
-    public void setDate(Date date)
+    public void setDate(LocalDateTime date)
     {
         dateLabel.setText(date.toString());
         this.date = date;

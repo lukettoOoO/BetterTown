@@ -5,6 +5,7 @@
 package com.mycompany.bettertown.user;
 
 import com.github.kevinsawicki.http.HttpRequest;
+import com.mycompany.bettertown.Feedback;
 import com.mycompany.bettertown.IssueData;
 import com.mycompany.bettertown.SolvedIssues;
 import com.mycompany.bettertown.login.DatabaseLogic;
@@ -67,7 +68,7 @@ public class MainTabsUser extends javax.swing.JFrame {
     private DefaultListModel<String> alertsViewListModel;
     private List<SolvedIssues> solvedIssues=new ArrayList<SolvedIssues>();
     private DefaultComboBoxModel<String> solvedViewModel;
-    
+    private int rating=0;
     
     
     public MainTabsUser() {
@@ -471,13 +472,13 @@ public class MainTabsUser extends javax.swing.JFrame {
         feedbackLabel = new javax.swing.JPanel();
         ResolvedIssues = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        SubjectPane = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         ResolvedByLabel = new javax.swing.JLabel();
-        jButton6 = new javax.swing.JButton();
+        SendFeedbackButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jEditorPane1 = new javax.swing.JEditorPane();
+        DescriptionPane = new javax.swing.JEditorPane();
         jLabel10 = new javax.swing.JLabel();
         starButton1 = new javax.swing.JButton();
         starButton2 = new javax.swing.JButton();
@@ -485,6 +486,7 @@ public class MainTabsUser extends javax.swing.JFrame {
         starButton4 = new javax.swing.JButton();
         starButton5 = new javax.swing.JButton();
         AdminName = new javax.swing.JLabel();
+        ErrorFeedback = new javax.swing.JLabel();
 
         jLabel14.setText("jLabel14");
 
@@ -1007,7 +1009,7 @@ public class MainTabsUser extends javax.swing.JFrame {
 
         feedbackLabel.setBackground(new java.awt.Color(255, 255, 255));
 
-        ResolvedIssues.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ResolvedIssues.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6", "Item 7", "Item 8", "Item 9" }));
         ResolvedIssues.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ResolvedIssuesActionPerformed(evt);
@@ -1026,9 +1028,14 @@ public class MainTabsUser extends javax.swing.JFrame {
         ResolvedByLabel.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
         ResolvedByLabel.setText("Resolved by:");
 
-        jButton6.setText("Send Feedback");
+        SendFeedbackButton.setText("Send Feedback");
+        SendFeedbackButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SendFeedbackButtonActionPerformed(evt);
+            }
+        });
 
-        jScrollPane3.setViewportView(jEditorPane1);
+        jScrollPane3.setViewportView(DescriptionPane);
 
         jLabel10.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
         jLabel10.setText("Rating:");
@@ -1075,7 +1082,7 @@ public class MainTabsUser extends javax.swing.JFrame {
             .addGroup(feedbackLabelLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton6)
+                    .addComponent(SendFeedbackButton)
                     .addGroup(feedbackLabelLayout.createSequentialGroup()
                         .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
@@ -1083,25 +1090,27 @@ public class MainTabsUser extends javax.swing.JFrame {
                             .addComponent(jLabel8)
                             .addComponent(jLabel10))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(feedbackLabelLayout.createSequentialGroup()
-                                .addComponent(ResolvedIssues, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ResolvedByLabel)
-                                .addGap(18, 18, 18)
-                                .addComponent(AdminName))
-                            .addComponent(jTextField2)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
-                            .addGroup(feedbackLabelLayout.createSequentialGroup()
-                                .addComponent(starButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(starButton2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(starButton3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(starButton4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(starButton5)))))
+                        .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ErrorFeedback)
+                            .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(feedbackLabelLayout.createSequentialGroup()
+                                    .addComponent(ResolvedIssues, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(ResolvedByLabel)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(AdminName))
+                                .addComponent(SubjectPane)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
+                                .addGroup(feedbackLabelLayout.createSequentialGroup()
+                                    .addComponent(starButton1)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(starButton2)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(starButton3)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(starButton4)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(starButton5))))))
                 .addContainerGap(121, Short.MAX_VALUE))
         );
         feedbackLabelLayout.setVerticalGroup(
@@ -1115,7 +1124,7 @@ public class MainTabsUser extends javax.swing.JFrame {
                     .addComponent(AdminName))
                 .addGap(12, 12, 12)
                 .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SubjectPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1130,8 +1139,10 @@ public class MainTabsUser extends javax.swing.JFrame {
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton6)
-                .addContainerGap(129, Short.MAX_VALUE))
+                .addComponent(SendFeedbackButton)
+                .addGap(18, 18, 18)
+                .addComponent(ErrorFeedback)
+                .addContainerGap(111, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Feedback", feedbackLabel);
@@ -1285,6 +1296,7 @@ public class MainTabsUser extends javax.swing.JFrame {
         starButton3.setBackground(Color.white);
         starButton2.setText("☆");
         starButton2.setBackground(Color.white);
+        rating=1;
     }//GEN-LAST:event_starButton1ActionPerformed
 
     private void starButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_starButton2ActionPerformed
@@ -1300,6 +1312,7 @@ public class MainTabsUser extends javax.swing.JFrame {
         starButton4.setBackground(Color.white);
         starButton3.setText("☆");
         starButton3.setBackground(Color.white);
+        rating=2;
     }//GEN-LAST:event_starButton2ActionPerformed
 
     private void starButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_starButton3ActionPerformed
@@ -1315,6 +1328,7 @@ public class MainTabsUser extends javax.swing.JFrame {
         starButton5.setBackground(Color.white);
         starButton4.setText("☆");
         starButton4.setBackground(Color.white);
+        rating=3;
     }//GEN-LAST:event_starButton3ActionPerformed
 
     private void starButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_starButton4ActionPerformed
@@ -1330,6 +1344,7 @@ public class MainTabsUser extends javax.swing.JFrame {
         
         starButton5.setText("☆");
         starButton5.setBackground(Color.white);
+        rating=4;
     }//GEN-LAST:event_starButton4ActionPerformed
 
     private void starButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_starButton5ActionPerformed
@@ -1344,6 +1359,7 @@ public class MainTabsUser extends javax.swing.JFrame {
         starButton4.setBackground(Color.yellow);
         starButton5.setText("★");
         starButton5.setBackground(Color.yellow);
+        rating=5;
     }//GEN-LAST:event_starButton5ActionPerformed
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
@@ -1515,6 +1531,36 @@ public class MainTabsUser extends javax.swing.JFrame {
         ProfileData admin=DatabaseLogic.getUserById(issue.getUserId());
         AdminName.setText(admin.getName());
     }//GEN-LAST:event_ResolvedIssuesActionPerformed
+
+    private void SendFeedbackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SendFeedbackButtonActionPerformed
+        // TODO add your handling code here:
+        if(solvedIssues.size()>0 && rating>0)
+        {
+            Feedback feedback=new Feedback();
+            int selectedIndex=ResolvedIssues.getSelectedIndex();
+            feedback.setSolvedId(solvedIssues.get(selectedIndex).getId());
+            feedback.setUserId(currentUserData.getId());
+            feedback.setSubject(SubjectPane.getText());
+            feedback.setRating(rating);
+            feedback.setDescription(DescriptionPane.getText());
+            String errorCheck=DatabaseLogic.addFeedback(feedback);
+            if(errorCheck!=null)
+            {
+                ErrorFeedback.setText(errorCheck);
+            }
+            else
+            {
+                ErrorFeedback.setText("");
+            }
+            SubjectPane.setText("");
+            DescriptionPane.setText("");
+        }
+        else
+        {
+            ErrorFeedback.setText("Cannot give feedback: Issue and rating requiered");
+        }
+        
+    }//GEN-LAST:event_SendFeedbackButtonActionPerformed
     
     /**
      * @param args the command line arguments
@@ -1557,8 +1603,12 @@ public class MainTabsUser extends javax.swing.JFrame {
     private javax.swing.JList<String> AlertList;
     private javax.swing.JButton DeleteAlertsButton;
     private javax.swing.JButton DeleteAllAlertsButton;
+    private javax.swing.JEditorPane DescriptionPane;
+    private javax.swing.JLabel ErrorFeedback;
     private javax.swing.JLabel ResolvedByLabel;
     private javax.swing.JComboBox<String> ResolvedIssues;
+    private javax.swing.JButton SendFeedbackButton;
+    private javax.swing.JTextField SubjectPane;
     private javax.swing.JEditorPane addressEditorPane;
     private javax.swing.JButton alertsButton;
     private javax.swing.JPanel alertsLabel;
@@ -1577,8 +1627,6 @@ public class MainTabsUser extends javax.swing.JFrame {
     private javax.swing.JPanel feedbackLabel;
     private javax.swing.JList<String> issueViewList;
     private javax.swing.JPanel issueViewPanel;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1606,7 +1654,6 @@ public class MainTabsUser extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JButton logOutButton;
     private javax.swing.JLabel logoLabel;
     private javax.swing.JButton mapButton;

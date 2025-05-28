@@ -4,6 +4,9 @@
  */
 package com.mycompany.bettertown;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 /**
  *
  * @author biancagrovu
@@ -12,15 +15,17 @@ public class SolvedIssues {
     private int id;
     private int userId;
     private int issueId;
+    private LocalDateTime date;
     public SolvedIssues()
     {
     
     }
-    public SolvedIssues(int id,int userId,int issueId)
+    public SolvedIssues(int id,int userId,int issueId,LocalDateTime date)
     {
         this.id=id;
         this.userId=userId;
         this.issueId=issueId;
+        this.date=date;
     }
     public int getId()
     {
@@ -34,6 +39,11 @@ public class SolvedIssues {
     {
         return issueId;
     }
+    public LocalDateTime getDate()
+    {
+        return date;
+    }
+    
     public void setId(int id)
     {
         this.id=id;
@@ -45,5 +55,9 @@ public class SolvedIssues {
     public void setIssueId(int issueId)
     {
         this.issueId=issueId;
+    }
+    public void setDate(LocalDateTime date)
+    {
+        this.date=date;
     }
 }

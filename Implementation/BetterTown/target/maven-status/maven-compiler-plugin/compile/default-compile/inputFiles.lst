@@ -1,4 +1,5 @@
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/BetterTown.java
+/Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/Feedback.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/ImageConverter.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/IssueData.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/SolvedIssues.java
@@ -6,7 +7,9 @@
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/AlertsAdmin.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/Comment.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/CommentAdminFrame.java
+/Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/FeedbackFrame.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/MainTabsAdmin.java
+/Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/Statistics.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/UpdateIssue.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/admin/UpdateIssueListener.java
 /Users/biancagrovu/Desktop/An2/BetterTown/Implementation/BetterTown/src/main/java/com/mycompany/bettertown/login/DatabaseLogic.java

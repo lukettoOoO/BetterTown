@@ -1,12 +1,13 @@
 package com.mycompany.bettertown.login;
 
 
+import com.mycompany.bettertown.Feedback;
 import static com.mycompany.bettertown.ImageConverter.byteArrayToImageIcon;
 import static com.mycompany.bettertown.ImageConverter.imageIconToByteArray;
 import com.mycompany.bettertown.IssueData;
 import com.mycompany.bettertown.SolvedIssues;
 import com.mycompany.bettertown.admin.Alerts;
-
+import com.mycompany.bettertown.user.MainTabsUser;
 import static com.mycompany.bettertown.login.DatabaseLogic.getConnection;
 import com.mycompany.bettertown.user.Comment;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import javax.swing.ImageIcon;
 import java.time.LocalDateTime;
 
@@ -72,7 +74,7 @@ public class DatabaseLogic {
         stmt.setInt(4, data.getPriority());
         stmt.setString(5, data.getCity());
         stmt.setString(6, data.getAddress());
-        stmt.setDate(7, new java.sql.Date(data.getDate().getTime()));
+        stmt.setTimestamp(7, Timestamp.valueOf(data.getDate()));
         stmt.setString(8, data.getUsername());
         stmt.setString(9, data.getStatus());
         stmt.setDouble(10, data.getLatitude());
@@ -120,7 +122,7 @@ public class DatabaseLogic {
             data.setPriority(rs.getInt("priority"));
             data.setCity(rs.getString("city"));
             data.setAddress(rs.getString("address"));
-            data.setDate(rs.getDate("date"));
+            data.setDate(rs.getTimestamp("date").toLocalDateTime());
             data.setUsername(rs.getString("username"));
             data.setStatus(rs.getString("status"));
             data.setLatitude(rs.getDouble("latitude"));
@@ -171,7 +173,7 @@ public class DatabaseLogic {
         stmt.setInt(4, data.getPriority());
         stmt.setString(5, data.getCity());
         stmt.setString(6, data.getAddress());
-        stmt.setDate(7, new java.sql.Date(data.getDate().getTime()));
+        stmt.setTimestamp(7, Timestamp.valueOf(data.getDate()));
         stmt.setString(8, data.getUsername());
         stmt.setString(9, data.getStatus());
         stmt.setDouble(10, data.getLatitude());
@@ -369,11 +371,12 @@ public class DatabaseLogic {
      
      public static void addSolvedIssue(SolvedIssues issue)
      {
-         String sql="insert into solved (issue_id, user_id) values (?, ?)";
+         String sql="insert into solved (issue_id, user_id, date) values (?, ?, ?)";
          try (Connection conn=getConnection(); PreparedStatement stmt=conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS))
          {
              stmt.setInt(1, issue.getIssueId());
              stmt.setInt(2,issue.getUserId());
+             stmt.setTimestamp(3, Timestamp.valueOf(issue.getDate()));
              stmt.execute();
              ResultSet rs=stmt.getGeneratedKeys();
              if(rs.next())
@@ -402,6 +405,7 @@ public class DatabaseLogic {
                 issue.setId(rs.getInt("id"));
                 issue.setIssueId(rs.getInt("issue_id"));
                 issue.setUserId(rs.getInt("user_id"));
+                issue.setDate(rs.getTimestamp("date").toLocalDateTime());
                 solved.add(issue);
                 
             }
@@ -418,7 +422,7 @@ public class DatabaseLogic {
          String sql="select title from issue where id=?";
          try(Connection conn = getConnection(); PreparedStatement stmt=conn.prepareStatement(sql))
          {
-             stmt.setInt(1,issue.getId());
+             stmt.setInt(1,issue.getIssueId());
              ResultSet rs=stmt.executeQuery();
              if(rs.next())
              {
@@ -430,5 +434,77 @@ public class DatabaseLogic {
          return null;
      }
      
+     public static String addFeedback(Feedback feedback)
+     {
+         String sql = "INSERT INTO feedback (solved_id, user_id, subject, rating, description) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = getConnection(); PreparedStatement stmt=conn.prepareStatement(sql)) {
+            stmt.setInt(1, feedback.getSolvedId());
+            stmt.setInt(2, feedback.getUserId());
+            stmt.setString(3, feedback.getSubject());
+            stmt.setInt(4, feedback.getRating());
+            stmt.setString(5, feedback.getDescription());
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            if (e.getSQLState().startsWith("23")) {
+               
+                    return "Already given feedback for this issue";
+            } else {
+                e.printStackTrace(); // altă eroare
+            }
+     }
+        return null;
+     }
      
+     public static List<Feedback> getAllFeedback(ProfileData user)
+     {
+         List<Feedback> feedbacks=new ArrayList<>();
+         String sql="select * from feedback f join solved s on f.solved_id=s.id where s.user_id=?";
+         try(Connection conn = getConnection(); PreparedStatement stmt=conn.prepareStatement(sql))
+         {
+             stmt.setInt(1,user.getId());
+             ResultSet rs=stmt.executeQuery();
+             while(rs.next())
+             {
+                Feedback feedback=new Feedback();
+                feedback.setId(rs.getInt("id"));
+                feedback.setSolvedId(rs.getInt("solved_id"));
+                feedback.setUserId(rs.getInt("user_id"));
+                feedback.setSubject(rs.getString("subject"));
+                feedback.setRating(rs.getInt("rating"));
+                feedback.setDescription(rs.getString("description"));
+                feedbacks.add(feedback);
+             }
+         }catch (SQLException e)
+         {
+             e.printStackTrace();
+         }
+         return feedbacks;
+     }
+     public static List<ProfileData> getAllAdmins()
+     {
+         List<ProfileData> users=new ArrayList<>();
+        String sql="SELECT * FROM users where status='admin'";
+        try (Connection conn=getConnection(); PreparedStatement stmt=conn.prepareStatement(sql))
+        {
+            ResultSet rs=stmt.executeQuery();
+            while(rs.next())
+            {
+                ProfileData user=new ProfileData();
+                user.setId(rs.getInt("id"));
+                user.setName(rs.getString("name"));
+                user.setCity(rs.getString("city"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setStatus(rs.getString("status"));
+                users.add(user);
+                
+            }
+        } catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return users;
+     }
 }

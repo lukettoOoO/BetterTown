@@ -1,5 +1,6 @@
 package com.mycompany.bettertown;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import javax.swing.ImageIcon;
 
@@ -12,7 +13,7 @@ public class IssueData
     private int priority;
     private String city;
     private String address;
-    private Date date;
+    private LocalDateTime date;
     private String username;
     private String status;
     
@@ -23,7 +24,7 @@ public class IssueData
     {
         
     }
-    public IssueData(String title, String description, ImageIcon photo, int priority, String city, String address, Date date, String username, String status, double latitude, double longitude) {
+    public IssueData(String title, String description, ImageIcon photo, int priority, String city, String address, LocalDateTime date, String username, String status, double latitude, double longitude) {
         
         this.title = title;
         this.description = description;
@@ -67,7 +68,7 @@ public class IssueData
         return address;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
@@ -115,7 +116,7 @@ public class IssueData
         this.address = address;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

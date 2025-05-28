@@ -20,6 +20,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -589,7 +590,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mapPanelLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(mapSearchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -987,7 +988,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                         .addComponent(DeleteAllAlertsButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(DeleteAlertButton)
-                        .addGap(0, 499, Short.MAX_VALUE))
+                        .addGap(0, 501, Short.MAX_VALUE))
                     .addComponent(jScrollPane2))
                 .addContainerGap())
         );
@@ -1013,6 +1014,11 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         StatisticsLabel.setText("Statistics:");
 
         ViewStatisticsButton.setText("View Statistics");
+        ViewStatisticsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ViewStatisticsButtonActionPerformed(evt);
+            }
+        });
 
         ManageAccountsLabel.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 18)); // NOI18N
         ManageAccountsLabel.setText("Manage Accounts:");
@@ -1047,6 +1053,11 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         FeedbackLabel.setText("Feedback:");
 
         ViewFeedbackButton.setText("View Feedback");
+        ViewFeedbackButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ViewFeedbackButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout feedbackLabelLayout = new javax.swing.GroupLayout(feedbackLabel);
         feedbackLabel.setLayout(feedbackLabelLayout);
@@ -1060,7 +1071,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                         .addComponent(StatisticsLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(ViewStatisticsButton)
-                        .addGap(73, 73, 73)
+                        .addGap(53, 53, 53)
                         .addComponent(FeedbackLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ViewFeedbackButton))
@@ -1078,7 +1089,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                             .addComponent(EditButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(BlockButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(DeleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addContainerGap(154, Short.MAX_VALUE))
         );
         feedbackLabelLayout.setVerticalGroup(
             feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1427,6 +1438,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                             SolvedIssues solvedIssue=new SolvedIssues();
                             solvedIssue.setIssueId(issueDataList.get(selectedIndex).getId());
                             solvedIssue.setUserId(currentAdminData.getId());
+                            solvedIssue.setDate(LocalDateTime.now());
                             DatabaseLogic.addSolvedIssue(solvedIssue);
                             
                         }
@@ -1533,6 +1545,19 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         DatabaseLogic.deleteAllAlerts(currentAdminData);
         initAlerts(currentAdminData);
     }//GEN-LAST:event_DeleteAllAlertsButtonActionPerformed
+
+    private void ViewStatisticsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewStatisticsButtonActionPerformed
+        // TODO add your handling code here:
+        Statistics statisticsObj = new Statistics();
+        statisticsObj.show();
+    }//GEN-LAST:event_ViewStatisticsButtonActionPerformed
+
+    private void ViewFeedbackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewFeedbackButtonActionPerformed
+        // TODO add your handling code here:
+        System.out.println(currentAdminData.getName());
+        FeedbackFrame feedbackFrame = new FeedbackFrame(currentAdminData);
+        feedbackFrame.show();
+    }//GEN-LAST:event_ViewFeedbackButtonActionPerformed
     
     /**
      * @param args the command line arguments

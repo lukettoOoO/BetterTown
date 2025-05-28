@@ -6,6 +6,7 @@ package com.mycompany.bettertown.user;
 
 import com.github.kevinsawicki.http.HttpRequest;
 import com.mycompany.bettertown.IssueData;
+import com.mycompany.bettertown.SolvedIssues;
 import com.mycompany.bettertown.login.DatabaseLogic;
 import com.mycompany.bettertown.login.LoginFrame;
 import com.mycompany.bettertown.login.LogoutConfirmationFrame;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.swing.DefaultComboBoxModel;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,6 +65,8 @@ public class MainTabsUser extends javax.swing.JFrame {
     private ProfileData currentUserData;
     private List<com.mycompany.bettertown.admin.Alerts> alerts=new ArrayList<com.mycompany.bettertown.admin.Alerts>();
     private DefaultListModel<String> alertsViewListModel;
+    private List<SolvedIssues> solvedIssues=new ArrayList<SolvedIssues>();
+    private DefaultComboBoxModel<String> solvedViewModel;
     
     
     
@@ -193,6 +197,24 @@ public class MainTabsUser extends javax.swing.JFrame {
         }
         AlertList.setModel(alertsViewListModel);
         System.out.println("Loaded alerts: "+ alerts.size());
+    }
+    
+    public void initSolvedIssues()
+    {
+        solvedIssues=DatabaseLogic.getAllSolvedIssues();
+        solvedViewModel=new DefaultComboBoxModel<>();
+        for(SolvedIssues s : solvedIssues)
+        {
+            String title=DatabaseLogic.getIssuebyId(s);
+            solvedViewModel.addElement(title);
+        }
+        ResolvedIssues.setModel(solvedViewModel);
+        if(solvedIssues.size()>=1)
+        {
+            SolvedIssues issue=solvedIssues.get(0);
+            ProfileData admin=DatabaseLogic.getUserById(issue.getUserId());
+            AdminName.setText(admin.getName());
+        }
     }
     
     private void addWaypoint(MyWaypoint waypoint)
@@ -447,12 +469,12 @@ public class MainTabsUser extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         AlertList = new javax.swing.JList<>();
         feedbackLabel = new javax.swing.JPanel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        ResolvedIssues = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        ResolvedByLabel = new javax.swing.JLabel();
         jButton6 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jEditorPane1 = new javax.swing.JEditorPane();
@@ -462,6 +484,7 @@ public class MainTabsUser extends javax.swing.JFrame {
         starButton3 = new javax.swing.JButton();
         starButton4 = new javax.swing.JButton();
         starButton5 = new javax.swing.JButton();
+        AdminName = new javax.swing.JLabel();
 
         jLabel14.setText("jLabel14");
 
@@ -984,7 +1007,12 @@ public class MainTabsUser extends javax.swing.JFrame {
 
         feedbackLabel.setBackground(new java.awt.Color(255, 255, 255));
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ResolvedIssues.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ResolvedIssues.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ResolvedIssuesActionPerformed(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
         jLabel6.setText("Resolved issues:");
@@ -995,8 +1023,8 @@ public class MainTabsUser extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
         jLabel8.setText("Description:");
 
-        jLabel9.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
-        jLabel9.setText("Resolved by:");
+        ResolvedByLabel.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
+        ResolvedByLabel.setText("Resolved by:");
 
         jButton6.setText("Send Feedback");
 
@@ -1057,9 +1085,11 @@ public class MainTabsUser extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(feedbackLabelLayout.createSequentialGroup()
-                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ResolvedIssues, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel9))
+                                .addComponent(ResolvedByLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(AdminName))
                             .addComponent(jTextField2)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
                             .addGroup(feedbackLabelLayout.createSequentialGroup()
@@ -1079,9 +1109,10 @@ public class MainTabsUser extends javax.swing.JFrame {
             .addGroup(feedbackLabelLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ResolvedIssues, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
-                    .addComponent(jLabel9))
+                    .addComponent(ResolvedByLabel)
+                    .addComponent(AdminName))
                 .addGap(12, 12, 12)
                 .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1476,6 +1507,14 @@ public class MainTabsUser extends javax.swing.JFrame {
         DatabaseLogic.deleteAllAlerts(currentUserData);
         initAlerts(currentUserData);
     }//GEN-LAST:event_DeleteAllAlertsButtonActionPerformed
+
+    private void ResolvedIssuesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResolvedIssuesActionPerformed
+        // TODO add your handling code here:
+        int selectedIndex=ResolvedIssues.getSelectedIndex();
+        SolvedIssues issue=solvedIssues.get(selectedIndex);
+        ProfileData admin=DatabaseLogic.getUserById(issue.getUserId());
+        AdminName.setText(admin.getName());
+    }//GEN-LAST:event_ResolvedIssuesActionPerformed
     
     /**
      * @param args the command line arguments
@@ -1514,9 +1553,12 @@ public class MainTabsUser extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel AdminName;
     private javax.swing.JList<String> AlertList;
     private javax.swing.JButton DeleteAlertsButton;
     private javax.swing.JButton DeleteAllAlertsButton;
+    private javax.swing.JLabel ResolvedByLabel;
+    private javax.swing.JComboBox<String> ResolvedIssues;
     private javax.swing.JEditorPane addressEditorPane;
     private javax.swing.JButton alertsButton;
     private javax.swing.JPanel alertsLabel;
@@ -1536,7 +1578,6 @@ public class MainTabsUser extends javax.swing.JFrame {
     private javax.swing.JList<String> issueViewList;
     private javax.swing.JPanel issueViewPanel;
     private javax.swing.JButton jButton6;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1557,7 +1598,6 @@ public class MainTabsUser extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

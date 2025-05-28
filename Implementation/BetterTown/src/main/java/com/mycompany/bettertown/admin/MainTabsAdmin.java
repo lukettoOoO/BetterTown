@@ -6,6 +6,7 @@ package com.mycompany.bettertown.admin;
 
 import com.github.kevinsawicki.http.HttpRequest;
 import com.mycompany.bettertown.IssueData;
+import com.mycompany.bettertown.SolvedIssues;
 import com.mycompany.bettertown.login.DatabaseLogic;
 import com.mycompany.bettertown.login.LogoutConfirmationFrame;
 import com.mycompany.bettertown.login.LogoutListener;
@@ -1420,6 +1421,14 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                             alert.setText(text);
                             DatabaseLogic.addAlert(alert);
                             initAlerts(currentAdminData);
+                        }
+                        if(statusAfter.equals("Resolved"))
+                        {
+                            SolvedIssues solvedIssue=new SolvedIssues();
+                            solvedIssue.setIssueId(issueDataList.get(selectedIndex).getId());
+                            solvedIssue.setUserId(currentAdminData.getId());
+                            DatabaseLogic.addSolvedIssue(solvedIssue);
+                            
                         }
                         issueViewListModel.setElementAt(issueData.getTitle(), selectedIndex);
                         printCurrentIssues();

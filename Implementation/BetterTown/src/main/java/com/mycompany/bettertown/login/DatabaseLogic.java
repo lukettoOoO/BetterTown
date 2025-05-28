@@ -4,6 +4,7 @@ package com.mycompany.bettertown.login;
 import static com.mycompany.bettertown.ImageConverter.byteArrayToImageIcon;
 import static com.mycompany.bettertown.ImageConverter.imageIconToByteArray;
 import com.mycompany.bettertown.IssueData;
+import com.mycompany.bettertown.SolvedIssues;
 import com.mycompany.bettertown.admin.Alerts;
 
 import static com.mycompany.bettertown.login.DatabaseLogic.getConnection;
@@ -365,4 +366,69 @@ public class DatabaseLogic {
         e.printStackTrace();
     }
      }
+     
+     public static void addSolvedIssue(SolvedIssues issue)
+     {
+         String sql="insert into solved (issue_id, user_id) values (?, ?)";
+         try (Connection conn=getConnection(); PreparedStatement stmt=conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS))
+         {
+             stmt.setInt(1, issue.getIssueId());
+             stmt.setInt(2,issue.getUserId());
+             stmt.execute();
+             ResultSet rs=stmt.getGeneratedKeys();
+             if(rs.next())
+             {
+                 int generatedId=rs.getInt(1);
+                 issue.setId(generatedId);
+             }
+             else{
+             System.out.println("No id generated for solved issue");
+             }
+         } catch (SQLException e){
+             e.printStackTrace();
+         }
+     }
+     
+     public static List<SolvedIssues> getAllSolvedIssues()
+     {
+         List<SolvedIssues> solved=new ArrayList<>();
+         String sql="select * from solved order by id DESC";
+         try(Connection conn = getConnection(); PreparedStatement stmt=conn.prepareStatement(sql))
+         {
+             ResultSet rs=stmt.executeQuery();
+            while(rs.next())
+            {
+                SolvedIssues issue=new SolvedIssues();
+                issue.setId(rs.getInt("id"));
+                issue.setIssueId(rs.getInt("issue_id"));
+                issue.setUserId(rs.getInt("user_id"));
+                solved.add(issue);
+                
+            }
+         } catch(SQLException e)
+         {
+             e.printStackTrace();
+         }
+         return solved;
+     }
+     
+     public static String getIssuebyId(SolvedIssues issue)
+     {
+         
+         String sql="select title from issue where id=?";
+         try(Connection conn = getConnection(); PreparedStatement stmt=conn.prepareStatement(sql))
+         {
+             stmt.setInt(1,issue.getId());
+             ResultSet rs=stmt.executeQuery();
+             if(rs.next())
+             {
+             return rs.getString("title");
+             }
+         } catch(SQLException e){
+             e.printStackTrace();
+         }
+         return null;
+     }
+     
+     
 }

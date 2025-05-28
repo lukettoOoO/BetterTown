@@ -274,6 +274,7 @@ public class LoginFrame extends javax.swing.JFrame {
                         System.out.println("La login: "+currentProfileData.getId());
                         MainTabsUser mainTabsUserObj = new MainTabsUser();
                         mainTabsUserObj.initAlerts(currentProfileData);
+                        mainTabsUserObj.initSolvedIssues();
                         mainTabsUserObj.setCurrentUserData(currentProfileData);
                         mainTabsUserObj.show();
                     } else if (roleToLog == 2) {

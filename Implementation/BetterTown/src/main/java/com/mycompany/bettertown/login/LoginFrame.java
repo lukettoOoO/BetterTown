@@ -39,7 +39,8 @@ public class LoginFrame extends javax.swing.JFrame {
     public LoginFrame() {
         initComponents();
         
-        this.logoIcon = new ImageIcon("logo.png");
+        //this.logoIcon = new ImageIcon("logo.png");
+        this.logoIcon = new ImageIcon(getClass().getResource("/logo.png"));
         logoLabel.setIcon(logoIcon);
         setLocationRelativeTo(null);
         

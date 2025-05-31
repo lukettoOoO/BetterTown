@@ -29,7 +29,8 @@ public class RegisterFrame extends javax.swing.JFrame {
     public RegisterFrame() {
         initComponents();
         
-        this.logoIcon = new ImageIcon("logo.png");
+        
+        this.logoIcon = new ImageIcon(getClass().getResource("/logo.png"));
         logoLabel.setIcon(logoIcon);
         setLocationRelativeTo(null);
         

@@ -72,7 +72,8 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     public MainTabsAdmin() {
         initComponents();
         
-        this.logoIcon = new ImageIcon("logo.png");
+        //this.logoIcon = new ImageIcon("logo.png");
+        this.logoIcon = new ImageIcon(getClass().getResource("/logo.png"));
         logoLabel.setIcon(logoIcon);
         setLocationRelativeTo(null);
         issueViewListModel = new DefaultListModel<>();
@@ -383,19 +384,24 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     
     private void initButtons()
     {
-        ImageIcon mapIcon = new ImageIcon("map.png");
+        //ImageIcon mapIcon = new ImageIcon("map.png");
+        ImageIcon mapIcon = new ImageIcon(getClass().getResource("/map.png"));
         mapButton.setIcon(mapIcon);
         
-        ImageIcon feedIcon = new ImageIcon("feed.png");
+        //ImageIcon feedIcon = new ImageIcon("feed.png");
+        ImageIcon feedIcon = new ImageIcon(getClass().getResource("/feed.png"));
         feedButton.setIcon(feedIcon);
         
-        ImageIcon alertsIcon = new ImageIcon("alerts.png");
+        //ImageIcon alertsIcon = new ImageIcon("alerts.png");
+        ImageIcon alertsIcon = new ImageIcon(getClass().getResource("/alerts.png"));
         alertsButton.setIcon(alertsIcon);
         
-        ImageIcon managerIcon = new ImageIcon("manager.png");
+        //ImageIcon managerIcon = new ImageIcon("manager.png");
+        ImageIcon managerIcon = new ImageIcon(getClass().getResource("/manager.png"));
         managerButton.setIcon(managerIcon);
         
-        ImageIcon searchIcon = new ImageIcon("search.png");
+        //ImageIcon searchIcon = new ImageIcon("search.png");
+        ImageIcon searchIcon = new ImageIcon(getClass().getResource("/search.png"));
         mapSearchButton.setIcon(searchIcon);
         
         

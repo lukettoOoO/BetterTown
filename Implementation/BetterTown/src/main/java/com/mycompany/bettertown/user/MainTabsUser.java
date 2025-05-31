@@ -385,19 +385,20 @@ public class MainTabsUser extends javax.swing.JFrame {
     
     private void initButtons()
     {
-        ImageIcon mapIcon = new ImageIcon("map.png");
+        //ImageIcon mapIcon = new ImageIcon("map.png");
+        ImageIcon mapIcon = new ImageIcon(getClass().getResource("/map.png"));
         mapButton.setIcon(mapIcon);
         
-        ImageIcon feedIcon = new ImageIcon("feed.png");
+        ImageIcon feedIcon = new ImageIcon(getClass().getResource("/feed.png"));
         feedButton.setIcon(feedIcon);
         
-        ImageIcon alertsIcon = new ImageIcon("alerts.png");
+        ImageIcon alertsIcon = new ImageIcon(getClass().getResource("/alerts.png"));
         alertsButton.setIcon(alertsIcon);
         
-        ImageIcon feedbackIcon = new ImageIcon("feedback.png");
+        ImageIcon feedbackIcon = new ImageIcon(getClass().getResource("/manager.png"));
         feedbackButton.setIcon(feedbackIcon);
         
-        ImageIcon searchIcon = new ImageIcon("search.png");
+        ImageIcon searchIcon = new ImageIcon(getClass().getResource("/search.png"));
         mapSearchButton.setIcon(searchIcon);
         
         feedSearchButton.setIcon(searchIcon);

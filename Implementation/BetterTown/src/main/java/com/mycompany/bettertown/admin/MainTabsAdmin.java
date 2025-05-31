@@ -5,6 +5,7 @@
 package com.mycompany.bettertown.admin;
 
 import com.github.kevinsawicki.http.HttpRequest;
+import com.mycompany.bettertown.BlockedUsers;
 import com.mycompany.bettertown.IssueData;
 import com.mycompany.bettertown.SolvedIssues;
 import com.mycompany.bettertown.login.DatabaseLogic;
@@ -65,7 +66,8 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private ProfileData currentAdminData;
     private List<Alerts> alerts=new ArrayList<Alerts>();
     private DefaultListModel<String> alertsViewListModel;
-   
+    private List<ProfileData> accounts=new ArrayList<>();
+    private DefaultListModel<String> accountsViewListModel;
    
     public MainTabsAdmin() {
         initComponents();
@@ -76,7 +78,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         issueViewListModel = new DefaultListModel<>();
         initMap();
         initButtons();
-        
+        initAccounts();
        
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -187,6 +189,18 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         }
         AlertList.setModel(alertsViewListModel);
         System.out.println("Loaded alerts: "+ alerts.size());
+    }
+    
+    public void initAccounts()
+    {
+        accounts=DatabaseLogic.getAllUserStatus();
+        accountsViewListModel=new DefaultListModel<>();
+        SearchTextField.setText("");
+        for(ProfileData a : accounts)
+        {
+            accountsViewListModel.addElement(a.getName());
+        }
+        AccountList.setModel(accountsViewListModel);
     }
     
     private void initWaypoint()
@@ -384,6 +398,9 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         ImageIcon searchIcon = new ImageIcon("search.png");
         mapSearchButton.setIcon(searchIcon);
         
+        
+       
+        accSearch.setIcon(searchIcon);
         feedSearchButton.setIcon(searchIcon);
     }
 
@@ -415,8 +432,6 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         feedPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         feedSearchTextField = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        feedSortComboBox = new javax.swing.JComboBox<>();
         reportButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         issueViewPanel = new javax.swing.JPanel();
@@ -460,14 +475,14 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         ViewStatisticsButton = new javax.swing.JButton();
         ManageAccountsLabel = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jList3 = new javax.swing.JList<>();
+        AccountList = new javax.swing.JList<>();
         DeleteButton = new javax.swing.JButton();
         BlockButton = new javax.swing.JButton();
         SearchTextField = new javax.swing.JTextField();
         EditButton = new javax.swing.JButton();
-        PasswordResetButton = new javax.swing.JButton();
         FeedbackLabel = new javax.swing.JLabel();
         ViewFeedbackButton = new javax.swing.JButton();
+        accSearch = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -638,16 +653,6 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         feedSearchTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 feedSearchTextFieldActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
-        jLabel2.setText("Sort by:");
-
-        feedSortComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascending", "Descending" }));
-        feedSortComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                feedSortComboBoxActionPerformed(evt);
             }
         });
 
@@ -881,13 +886,9 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(feedSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                 .addComponent(feedSearchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(feedSortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(71, 71, 71)
+                .addGap(239, 239, 239)
                 .addComponent(reportButton)
                 .addGap(23, 23, 23))
             .addComponent(jSeparator1)
@@ -924,8 +925,6 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                     .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
                         .addComponent(feedSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2)
-                        .addComponent(feedSortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(reportButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1023,17 +1022,22 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         ManageAccountsLabel.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 18)); // NOI18N
         ManageAccountsLabel.setText("Manage Accounts:");
 
-        jList3.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 204, 255), 1, true), "Account List", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font(".AppleSystemUIFont", 0, 24), new java.awt.Color(51, 204, 255))); // NOI18N
-        jList3.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 14)); // NOI18N
-        jList3.setModel(new javax.swing.AbstractListModel<String>() {
+        AccountList.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 204, 255), 1, true), "Account List", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font(".AppleSystemUIFont", 0, 24), new java.awt.Color(51, 204, 255))); // NOI18N
+        AccountList.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 14)); // NOI18N
+        AccountList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "6", "7", "3", "2", "3", "4", "5", "32", "2", "1", "1", "34", "ef", "ewf", "a", "edf", "awr", "g", "erg", "er", "hg", "ert", "h", "eth", "etherg", "a", "reg", "reg", "arg", " " };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane3.setViewportView(jList3);
+        jScrollPane3.setViewportView(AccountList);
 
         DeleteButton.setForeground(new java.awt.Color(255, 0, 0));
         DeleteButton.setText("Delete");
+        DeleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteButtonActionPerformed(evt);
+            }
+        });
 
         BlockButton.setForeground(new java.awt.Color(255, 0, 0));
         BlockButton.setText("Block");
@@ -1046,8 +1050,11 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         SearchTextField.setText("Search...");
 
         EditButton.setText("Edit");
-
-        PasswordResetButton.setText("Password Reset");
+        EditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditButtonActionPerformed(evt);
+            }
+        });
 
         FeedbackLabel.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 18)); // NOI18N
         FeedbackLabel.setText("Feedback:");
@@ -1056,6 +1063,12 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         ViewFeedbackButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ViewFeedbackButtonActionPerformed(evt);
+            }
+        });
+
+        accSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                accSearchActionPerformed(evt);
             }
         });
 
@@ -1080,13 +1093,15 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                         .addComponent(ManageAccountsLabel))
                     .addGroup(feedbackLabelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(SearchTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE))
+                        .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(feedbackLabelLayout.createSequentialGroup()
+                                .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(accSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(PasswordResetButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(EditButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(EditButton, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
                             .addComponent(BlockButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(DeleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(154, Short.MAX_VALUE))
@@ -1105,7 +1120,9 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ManageAccountsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(SearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(SearchTextField)
+                    .addComponent(accSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(feedbackLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1114,9 +1131,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(BlockButton)
                         .addGap(33, 33, 33)
-                        .addComponent(EditButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(PasswordResetButton)))
+                        .addComponent(EditButton)))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
@@ -1221,45 +1236,6 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private void feedSearchTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_feedSearchTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_feedSearchTextFieldActionPerformed
-
-    private void feedSortComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_feedSortComboBoxActionPerformed
-        // TODO add your handling code here:
-        int index = comboMapType.getSelectedIndex();
-        switch (index) {
-            case 0 -> {
-                for (int i = 0; i < issueViewListModel.getSize() - 1; i++)
-                {
-                    for (int j = 0; j < issueViewListModel.getSize() - i - 1; j++)
-                    {
-                        if (issueViewListModel.getElementAt(j).compareTo(issueViewListModel.getElementAt(j + 1)) > 0)
-                        {
-                            String temp = issueViewListModel.getElementAt(j);
-                            issueViewListModel.setElementAt(issueViewListModel.getElementAt(j + 1), j);
-                            issueViewListModel.setElementAt(temp, j + 1);
-                        }
-                    }
-                }
-                issueViewList.setModel(issueViewListModel);
-            }
-            case 1 -> {
-                for (int i = 0; i < issueViewListModel.getSize() - 1; i++)
-                {
-                    for (int j = 0; j < issueViewListModel.getSize() - i - 1; j++)
-                    {
-                        if (issueViewListModel.getElementAt(j).compareTo(issueViewListModel.getElementAt(j + 1)) < 0)
-                        {
-                            String temp = issueViewListModel.getElementAt(j);
-                            issueViewListModel.setElementAt(issueViewListModel.getElementAt(j + 1), j);
-                            issueViewListModel.setElementAt(temp, j + 1);
-                        }
-                    }
-                }
-                issueViewList.setModel(issueViewListModel);
-            }
-            default -> {
-            }
-        }
-    }//GEN-LAST:event_feedSortComboBoxActionPerformed
 
     private void reportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportButtonActionPerformed
         // TODO add your handling code here:
@@ -1501,6 +1477,11 @@ public class MainTabsAdmin extends javax.swing.JFrame {
             }
         }
         int selectedIndex = issueViewList.getSelectedIndex();
+        if(issueDataList.get(selectedIndex).getStatus().equals("Resolved"));
+        {
+            //Delete issue from solved in database
+            DatabaseLogic.deleteSolvedIssue(issueDataList.get(selectedIndex));
+        }
          DatabaseLogic.deleteIssue(issueDataList.get(selectedIndex));
         issueDataList.remove(issueViewList.getSelectedIndex());
         issueViewListModel.removeElementAt(issueViewList.getSelectedIndex());
@@ -1527,6 +1508,10 @@ public class MainTabsAdmin extends javax.swing.JFrame {
 
     private void BlockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BlockButtonActionPerformed
         // TODO add your handling code here:
+        int selectedIndex=AccountList.getSelectedIndex();
+        BlockedUsers user=new BlockedUsers();
+        user.setUserId(accounts.get(selectedIndex).getId());
+        DatabaseLogic.blockUser(user);
     }//GEN-LAST:event_BlockButtonActionPerformed
 
     private void DeleteAlertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteAlertButtonActionPerformed
@@ -1558,6 +1543,40 @@ public class MainTabsAdmin extends javax.swing.JFrame {
         FeedbackFrame feedbackFrame = new FeedbackFrame(currentAdminData);
         feedbackFrame.show();
     }//GEN-LAST:event_ViewFeedbackButtonActionPerformed
+
+    private void accSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accSearchActionPerformed
+        // TODO add your handling code here:
+        for(int i=0;i<accountsViewListModel.getSize();i++)
+        {
+        if(SearchTextField.getText().equals(accountsViewListModel.getElementAt(i)))
+        {
+            AccountList.setSelectedIndex(i);
+            SearchTextField.setText("");
+            break;
+        }
+        }
+    }//GEN-LAST:event_accSearchActionPerformed
+
+    private void DeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteButtonActionPerformed
+        // TODO add your handling code here:
+        int selectedIndex=AccountList.getSelectedIndex();
+        DatabaseLogic.deleteUser(accounts.get(selectedIndex));
+        accounts.remove(AccountList.getSelectedIndex());
+        accountsViewListModel.removeElementAt(AccountList.getSelectedIndex());
+        initAccounts();
+        if(accountsViewListModel.getSize()>=1)
+        {
+            AccountList.setSelectedIndex(selectedIndex-1);
+        }
+    }//GEN-LAST:event_DeleteButtonActionPerformed
+
+    private void EditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditButtonActionPerformed
+        // TODO add your handling code here:
+        int selectedIndex=AccountList.getSelectedIndex();
+        if(selectedIndex!=-1)
+        {EditAccount editAccount=new EditAccount(accounts.get(selectedIndex));
+        editAccount.show();}
+    }//GEN-LAST:event_EditButtonActionPerformed
     
     /**
      * @param args the command line arguments
@@ -1598,6 +1617,7 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList<String> AccountList;
     private javax.swing.JList<String> AlertList;
     private javax.swing.JButton BlockButton;
     private javax.swing.JButton DeleteAlertButton;
@@ -1606,11 +1626,11 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private javax.swing.JButton EditButton;
     private javax.swing.JLabel FeedbackLabel;
     private javax.swing.JLabel ManageAccountsLabel;
-    private javax.swing.JButton PasswordResetButton;
     private javax.swing.JTextField SearchTextField;
     private javax.swing.JLabel StatisticsLabel;
     private javax.swing.JButton ViewFeedbackButton;
     private javax.swing.JButton ViewStatisticsButton;
+    private javax.swing.JButton accSearch;
     private javax.swing.JEditorPane addressEditorPane;
     private javax.swing.JButton alertsButton;
     private javax.swing.JPanel alertsLabel;
@@ -1625,7 +1645,6 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private javax.swing.JPanel feedPanel;
     private javax.swing.JButton feedSearchButton;
     private javax.swing.JTextField feedSearchTextField;
-    private javax.swing.JComboBox<String> feedSortComboBox;
     private javax.swing.JPanel feedbackLabel;
     private javax.swing.JList<String> issueViewList;
     private javax.swing.JPanel issueViewPanel;
@@ -1636,13 +1655,11 @@ public class MainTabsAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JList<String> jList3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

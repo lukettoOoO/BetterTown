@@ -1,12 +1,14 @@
 package com.mycompany.bettertown.login;
 
 
+import com.mycompany.bettertown.BlockedUsers;
 import com.mycompany.bettertown.Feedback;
 import static com.mycompany.bettertown.ImageConverter.byteArrayToImageIcon;
 import static com.mycompany.bettertown.ImageConverter.imageIconToByteArray;
 import com.mycompany.bettertown.IssueData;
 import com.mycompany.bettertown.SolvedIssues;
 import com.mycompany.bettertown.admin.Alerts;
+
 import com.mycompany.bettertown.user.MainTabsUser;
 import static com.mycompany.bettertown.login.DatabaseLogic.getConnection;
 import com.mycompany.bettertown.user.Comment;
@@ -249,11 +251,12 @@ public class DatabaseLogic {
     
     public static ProfileData getUserById(int userId) {
     String sql = "SELECT id, name, city, email, password, status FROM users WHERE id = ?";
-    try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+    try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)) {
         stmt.setInt(1, userId);
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
             return new ProfileData(
+                rs.getInt("id"),
                 rs.getString("name"),
                 rs.getString("city"),
                 rs.getString("password"),
@@ -316,6 +319,32 @@ public class DatabaseLogic {
             {
                 System.out.println("No id generated for alert");
             }
+            }
+            
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void addAlertForAdmin(Alerts alert, ProfileData user)
+    {
+        String sql="INSERT INTO alerts (user_id, text) VALUES (?,?)";
+        
+        try (Connection conn=getConnection(); PreparedStatement stmt=conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS))
+        {   System.out.println("id in add alert "+user.getId());
+            stmt.setInt(1,user.getId());
+            stmt.setString(2,alert.getText());
+            stmt.execute();
+            ResultSet rs=stmt.getGeneratedKeys();
+            if(rs.next())
+            {
+                int generatedId=rs.getInt(1);
+                alert.setId(generatedId);
+            }
+            else
+            {
+                System.out.println("No id generated for alert");
             }
             
         } catch (SQLException e)
@@ -507,4 +536,125 @@ public class DatabaseLogic {
         }
         return users;
      }
+     
+     public static void deleteSolvedIssue(IssueData data)
+     {
+         String sql="delete from solved where issue_id=?";
+         try(Connection conn = getConnection(); PreparedStatement stmt=conn.prepareStatement(sql))
+         {
+             stmt.setInt(1,data.getId());
+             stmt.executeUpdate();
+         }catch(SQLException e)
+         {
+             e.printStackTrace();
+         }
+     }
+     
+     public static List<ProfileData> getAllUserStatus()
+     {
+         List<ProfileData> users=new ArrayList<>();
+        String sql="SELECT * FROM users where status='user'";
+        try (Connection conn=getConnection(); PreparedStatement stmt=conn.prepareStatement(sql))
+        {
+            ResultSet rs=stmt.executeQuery();
+            while(rs.next())
+            {
+                ProfileData user=new ProfileData();
+                user.setId(rs.getInt("id"));
+                user.setName(rs.getString("name"));
+                user.setCity(rs.getString("city"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                users.add(user);
+                
+            }
+        } catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return users;
+     }
+     
+     public static void deleteUser(ProfileData user)
+     {
+         String sql="delete from users where id=?";
+         try(Connection conn = getConnection(); PreparedStatement stmt=conn.prepareStatement(sql))
+         {
+             stmt.setInt(1,user.getId());
+             stmt.executeUpdate();
+         }catch(SQLException e)
+         {
+             e.printStackTrace();
+         }
+     }
+     
+     public static void blockUser(BlockedUsers user)
+     {
+         String sql="insert into blocked (user_id) values (?)";
+         try(Connection conn=getConnection(); PreparedStatement stmt=conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS))
+         {
+             stmt.setInt(1, user.getUserId());
+             stmt.execute();
+             ResultSet rs=stmt.getGeneratedKeys();
+             if(rs.next())
+             {
+                 int generatedId=rs.getInt(1);
+                 user.setId(generatedId);
+             }
+             else
+             {
+                 System.out.println("No generated id for blocked user");
+             }
+             
+         } catch(SQLException e)
+         {
+            e.printStackTrace();
+         }
+     }
+     
+     public static List<BlockedUsers> getBlockedUsers()
+     {
+         List<BlockedUsers> users=new ArrayList<>();
+         String sql="select * from blocked";
+         try(Connection conn=getConnection(); PreparedStatement stmt=conn.prepareStatement(sql))
+         {
+             ResultSet rs=stmt.executeQuery();
+             while(rs.next())
+             {
+                 BlockedUsers user=new BlockedUsers();
+                 user.setId(rs.getInt("id"));
+                 user.setUserId(rs.getInt("user_id"));
+                 users.add(user);
+             }
+             
+         } catch (SQLException e)
+         {
+             e.printStackTrace();
+         }
+        return users;
+     }
+     
+     public static void EditUser(ProfileData user, String hashedPas)
+     {
+         String sql = "UPDATE users SET name = ?, password = ? WHERE id = ?";
+         
+    try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1,user.getName());
+        stmt.setString(2,hashedPas);
+        stmt.setInt(3,user.getId());
+        if (user.getId() == 0) {
+            System.err.println("Eroare: ID-ul pentru update este 0 sau never set!");
+        }
+        System.out.println("Updating user with ID: " + user.getId());
+        int rowsAffected = stmt.executeUpdate();
+        System.out.println("Rows updated: " + rowsAffected);
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+     }
 }
+     
+     
+     
+     
+     

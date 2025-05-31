@@ -13,6 +13,7 @@ com/mycompany/bettertown/admin/MainTabsAdmin$14.class
 com/mycompany/bettertown/admin/MainTabsAdmin$11.class
 com/mycompany/bettertown/user/MainTabsUser$11.class
 com/mycompany/bettertown/admin/MainTabsAdmin$30.class
+com/mycompany/bettertown/admin/EditAccount$1.class
 com/mycompany/bettertown/login/LogoutConfirmationFrame.class
 com/mycompany/bettertown/admin/MainTabsAdmin$16.class
 com/mycompany/bettertown/admin/MainTabsAdmin.class
@@ -29,6 +30,7 @@ com/mycompany/bettertown/admin/UpdateIssueListener.class
 com/mycompany/bettertown/admin/MainTabsAdmin$6.class
 com/mycompany/bettertown/admin/Comment.class
 com/mycompany/bettertown/admin/MainTabsAdmin$9.class
+com/mycompany/bettertown/admin/MainTabsAdmin$35.class
 com/mycompany/bettertown/user/MainTabsUser$34.class
 com/mycompany/bettertown/admin/UpdateIssue$1.class
 com/mycompany/bettertown/map/WaypointRender.class
@@ -96,6 +98,7 @@ com/mycompany/bettertown/admin/MainTabsAdmin$31.class
 com/mycompany/bettertown/user/MainTabsUser$15.class
 com/mycompany/bettertown/admin/UpdateIssue$6$1.class
 com/mycompany/bettertown/user/MainTabsUser$10.class
+com/mycompany/bettertown/BlockedUsers.class
 com/mycompany/bettertown/user/MainTabsUser$12.class
 com/mycompany/bettertown/user/Alerts.class
 com/mycompany/bettertown/user/AddIssue.class
@@ -114,8 +117,10 @@ com/mycompany/bettertown/admin/MainTabsAdmin$34.class
 com/mycompany/bettertown/user/MainTabsUser$33.class
 com/mycompany/bettertown/user/AddIssueListener.class
 com/mycompany/bettertown/admin/MainTabsAdmin$8.class
+com/mycompany/bettertown/admin/MainTabsAdmin$36.class
 com/mycompany/bettertown/user/CommentUserFrame.class
 com/mycompany/bettertown/user/MainTabsUser$18.class
+com/mycompany/bettertown/admin/EditAccount$2.class
 com/mycompany/bettertown/user/MainTabsUser$13.class
 com/mycompany/bettertown/admin/Statistics$1.class
 com/mycompany/bettertown/login/LogoutConfirmationFrame$2.class
@@ -135,3 +140,4 @@ com/mycompany/bettertown/admin/MainTabsAdmin$24.class
 com/mycompany/bettertown/SolvedIssues.class
 com/mycompany/bettertown/admin/MainTabsAdmin$26.class
 com/mycompany/bettertown/Feedback.class
+com/mycompany/bettertown/admin/EditAccount.class

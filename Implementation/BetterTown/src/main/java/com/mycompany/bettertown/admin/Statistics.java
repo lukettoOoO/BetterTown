@@ -10,6 +10,7 @@ import com.mycompany.bettertown.login.DatabaseLogic;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JFrame;
 
 /**
  *
@@ -29,6 +30,7 @@ public class Statistics extends javax.swing.JFrame {
     private long totalSeconds=0;
     public Statistics() {
         initComponents();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         issues=DatabaseLogic.getAllIssues();
         solvedIssues=DatabaseLogic.getAllSolvedIssues();
         Number.setText(String.valueOf(issues.size()));

@@ -18,6 +18,14 @@ public class ProfileData
         this.email = email;
         this.status = status;
     }
+    public ProfileData(int id,String name, String city, String password, String email, String status) {
+        this.id=id;
+        this.name = name;
+        this.city = city;
+        this.password = password;
+        this.email = email;
+        this.status = status;
+    }
     public ProfileData()
     {
     

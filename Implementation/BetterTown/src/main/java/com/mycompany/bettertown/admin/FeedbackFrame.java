@@ -9,6 +9,7 @@ import com.mycompany.bettertown.login.DatabaseLogic;
 import com.mycompany.bettertown.login.ProfileData;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JFrame;
 
 /**
  *
@@ -30,6 +31,7 @@ public class FeedbackFrame extends javax.swing.JFrame {
     private int rank=1;
     public FeedbackFrame(ProfileData admin) {
         initComponents();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.admin=admin;
         System.out.println("In feedback: "+admin.getName());
         feedbacks=DatabaseLogic.getAllFeedback(admin);

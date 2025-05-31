@@ -4,6 +4,7 @@
  */
 package com.mycompany.bettertown.login;
 
+import com.mycompany.bettertown.BlockedUsers;
 import com.mycompany.bettertown.admin.MainTabsAdmin;
 import com.mycompany.bettertown.login.DatabaseLogic;
 import com.mycompany.bettertown.login.ProfileData;
@@ -14,6 +15,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import org.mindrot.jbcrypt.BCrypt;
@@ -32,6 +35,7 @@ public class LoginFrame extends javax.swing.JFrame {
     ImageIcon logoIcon;
     private int roleToLog; //0 - none, 1 - user, 2 - admin
     private ProfileData currentProfileData;
+    private int checkBlock=0;
     public LoginFrame() {
         initComponents();
         
@@ -268,21 +272,46 @@ public class LoginFrame extends javax.swing.JFrame {
                 if (BCrypt.checkpw(password, hashedPasswordFromDb)) {
                     currentProfileData = new ProfileData(nameFromDb, cityFromDb, "", email, statusFromDb); // Nu stoca parola nehashuită
                     currentProfileData.setId(idFromDb);
+                    List<BlockedUsers> blockedUsers=new ArrayList<>();
+                    blockedUsers=DatabaseLogic.getBlockedUsers();
+                    for(BlockedUsers b : blockedUsers)
+                    {
+                        if(currentProfileData.getId()==b.getUserId())
+                            checkBlock=1;
+                    }
                     
-                    this.hide();
+                    //this.hide();
                     if (roleToLog == 1 && statusFromDb.equals("user")) {
-                        System.out.println("La login: "+currentProfileData.getId());
-                        MainTabsUser mainTabsUserObj = new MainTabsUser();
-                        mainTabsUserObj.initAlerts(currentProfileData);
-                        mainTabsUserObj.initSolvedIssues();
-                        mainTabsUserObj.setCurrentUserData(currentProfileData);
-                        mainTabsUserObj.show();
+                        if(checkBlock==1)
+                        {
+                            errorLabel.setText("This account has been blocked!");
+                        }
+                        else
+                        {
+                            System.out.println("La login: "+currentProfileData.getId());
+                            MainTabsUser mainTabsUserObj = new MainTabsUser();
+                            mainTabsUserObj.initAlerts(currentProfileData);
+                            mainTabsUserObj.initSolvedIssues();
+                            mainTabsUserObj.setCurrentUserData(currentProfileData);
+                            this.hide();
+                            mainTabsUserObj.show();
+                        }  
+                          
                     } else if (roleToLog == 2) {
-                        System.out.println(currentProfileData.getName());
-                        MainTabsAdmin mainTabsAdminObj = new MainTabsAdmin();
-                        mainTabsAdminObj.setCurrentAdminData(currentProfileData);
-                        mainTabsAdminObj.initAlerts(currentProfileData);
-                        mainTabsAdminObj.show();
+                        if(checkBlock==1)
+                        {
+                            errorLabel.setText("This account has been blocked!");
+                        }
+                        else
+                        {
+                            System.out.println(currentProfileData.getName());
+                            MainTabsAdmin mainTabsAdminObj = new MainTabsAdmin();
+                            mainTabsAdminObj.setCurrentAdminData(currentProfileData);
+                            mainTabsAdminObj.initAlerts(currentProfileData);
+                            this.hide();
+                            mainTabsAdminObj.show();
+                        }
+                        
                     } else {
                         errorLabel.setText("Invalid role for this user!");
                     }

@@ -69,7 +69,8 @@ public class MainTabsUser extends javax.swing.JFrame {
     private List<SolvedIssues> solvedIssues=new ArrayList<SolvedIssues>();
     private DefaultComboBoxModel<String> solvedViewModel;
     private int rating=0;
-    
+    private ProfileData admin;
+    private com.mycompany.bettertown.admin.Alerts alert=new com.mycompany.bettertown.admin.Alerts();
     
     public MainTabsUser() {
         initComponents();
@@ -432,8 +433,6 @@ public class MainTabsUser extends javax.swing.JFrame {
         feedPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         feedSearchTextField = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        feedSortComboBox = new javax.swing.JComboBox<>();
         reportButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         issueViewPanel = new javax.swing.JPanel();
@@ -664,16 +663,6 @@ public class MainTabsUser extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font(".AppleSystemUIFont", 0, 13)); // NOI18N
-        jLabel2.setText("Sort by:");
-
-        feedSortComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascending", "Descending" }));
-        feedSortComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                feedSortComboBoxActionPerformed(evt);
-            }
-        });
-
         reportButton.setText("Report an issue...");
         reportButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -891,11 +880,7 @@ public class MainTabsUser extends javax.swing.JFrame {
                 .addComponent(feedSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(feedSearchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(feedSortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(71, 71, 71)
+                .addGap(239, 239, 239)
                 .addComponent(reportButton)
                 .addGap(23, 23, 23))
             .addComponent(jSeparator1)
@@ -929,8 +914,6 @@ public class MainTabsUser extends javax.swing.JFrame {
                     .addGroup(feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
                         .addComponent(feedSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2)
-                        .addComponent(feedSortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(reportButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1469,45 +1452,6 @@ public class MainTabsUser extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_feedSearchButtonActionPerformed
 
-    private void feedSortComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_feedSortComboBoxActionPerformed
-        // TODO add your handling code here:
-        int index = comboMapType.getSelectedIndex();
-        switch (index) {
-            case 0 -> {
-                for (int i = 0; i < issueViewListModel.getSize() - 1; i++) 
-                {
-                    for (int j = 0; j < issueViewListModel.getSize() - i - 1; j++) 
-                    {
-                        if (issueViewListModel.getElementAt(j).compareTo(issueViewListModel.getElementAt(j + 1)) > 0) 
-                        {
-                            String temp = issueViewListModel.getElementAt(j);
-                            issueViewListModel.setElementAt(issueViewListModel.getElementAt(j + 1), j);
-                            issueViewListModel.setElementAt(temp, j + 1);
-                        }
-                    }
-                }
-                issueViewList.setModel(issueViewListModel);
-            }
-            case 1 -> {
-                for (int i = 0; i < issueViewListModel.getSize() - 1; i++) 
-                {
-                    for (int j = 0; j < issueViewListModel.getSize() - i - 1; j++) 
-                    {
-                        if (issueViewListModel.getElementAt(j).compareTo(issueViewListModel.getElementAt(j + 1)) < 0) 
-                        {
-                            String temp = issueViewListModel.getElementAt(j);
-                            issueViewListModel.setElementAt(issueViewListModel.getElementAt(j + 1), j);
-                            issueViewListModel.setElementAt(temp, j + 1);
-                        }
-                    }
-                }
-                issueViewList.setModel(issueViewListModel);
-            }
-            default -> {
-            }
-        }
-    }//GEN-LAST:event_feedSortComboBoxActionPerformed
-
     private void DeleteAlertsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteAlertsButtonActionPerformed
         // TODO add your handling code here:
         int selectedIndex=AlertList.getSelectedIndex();
@@ -1528,7 +1472,7 @@ public class MainTabsUser extends javax.swing.JFrame {
         // TODO add your handling code here:
         int selectedIndex=ResolvedIssues.getSelectedIndex();
         SolvedIssues issue=solvedIssues.get(selectedIndex);
-        ProfileData admin=DatabaseLogic.getUserById(issue.getUserId());
+        admin=DatabaseLogic.getUserById(issue.getUserId());
         AdminName.setText(admin.getName());
     }//GEN-LAST:event_ResolvedIssuesActionPerformed
 
@@ -1551,6 +1495,17 @@ public class MainTabsUser extends javax.swing.JFrame {
             else
             {
                 ErrorFeedback.setText("");
+                
+                String issue;
+                issue=DatabaseLogic.getIssuebyId(solvedIssues.get(selectedIndex));
+                String alertText="Recieved feedback for issue: "+issue+", rating: "+rating;
+                if(DescriptionPane.getText()!=null)
+                {
+                    alertText+=", description: "+DescriptionPane.getText();
+                }
+                alert.setText(alertText);
+                DatabaseLogic.addAlertForAdmin(alert, admin);
+                
             }
             SubjectPane.setText("");
             DescriptionPane.setText("");
@@ -1622,7 +1577,6 @@ public class MainTabsUser extends javax.swing.JFrame {
     private javax.swing.JPanel feedPanel;
     private javax.swing.JButton feedSearchButton;
     private javax.swing.JTextField feedSearchTextField;
-    private javax.swing.JComboBox<String> feedSortComboBox;
     private javax.swing.JButton feedbackButton;
     private javax.swing.JPanel feedbackLabel;
     private javax.swing.JList<String> issueViewList;
@@ -1637,7 +1591,6 @@ public class MainTabsUser extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel24;

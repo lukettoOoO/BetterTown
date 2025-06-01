@@ -5,6 +5,7 @@ com/mycompany/bettertown/user/IssueDatabase.class
 com/mycompany/bettertown/user/CommentUserFrame$3.class
 com/mycompany/bettertown/login/RegisterFrame.class
 com/mycompany/bettertown/admin/MainTabsAdmin$4.class
+com/mycompany/bettertown/user/MainTabsUser$28.class
 com/mycompany/bettertown/admin/MainTabsAdmin$10.class
 com/mycompany/bettertown/admin/MainTabsAdmin$20.class
 com/mycompany/bettertown/user/CommentUserFrame.class
@@ -93,6 +94,7 @@ com/mycompany/bettertown/admin/EditAccount.class
 com/mycompany/bettertown/user/CommentUserFrame$4.class
 com/mycompany/bettertown/login/LogoutConfirmationFrame$2.class
 com/mycompany/bettertown/user/MainTabsUser$24.class
+com/mycompany/bettertown/user/AddIssue$5.class
 com/mycompany/bettertown/admin/MainTabsAdmin$3.class
 com/mycompany/bettertown/login/LoginFrame$3.class
 com/mycompany/bettertown/admin/CommentAdminFrame$4.class
@@ -130,6 +132,7 @@ com/mycompany/bettertown/user/AddIssueListener.class
 com/mycompany/bettertown/admin/MainTabsAdmin$13.class
 com/mycompany/bettertown/login/RegisterFrame$3.class
 com/mycompany/bettertown/admin/MainTabsAdmin$8.class
+com/mycompany/bettertown/admin/UpdateIssue$1.class
 com/mycompany/bettertown/IssueData.class
 com/mycompany/bettertown/admin/MainTabsAdmin$1.class
 com/mycompany/bettertown/login/LoginFrame$5.class

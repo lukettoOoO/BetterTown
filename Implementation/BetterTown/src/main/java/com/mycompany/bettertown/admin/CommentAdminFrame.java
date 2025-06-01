@@ -28,16 +28,23 @@ public class CommentAdminFrame extends javax.swing.JFrame {
     private ProfileData currentUser;
     //Vezi sa nu lasi astea doua pe null
     private ProfileData loggedUser;
-    public void loadComments(IssueData issue)
-    {
-        loadedComments = DatabaseLogic.getCommentForIssue(issue);
-        DefaultListModel<String> model= new DefaultListModel<>();
-        for(com.mycompany.bettertown.user.Comment c : loadedComments){
-            model.addElement(c.getTitle());
-        }
-        CommentsList.setModel(model);
-        System.out.println("Loaded comments: " + loadedComments.size());
+    public void loadComments(IssueData issue) {
+    if (issue == null) {
+        System.out.println("setCurrentIssue with null issue");
+        loadedComments = new ArrayList<>();
+        CommentsList.setModel(new DefaultListModel<>());
+        return;
     }
+
+    loadedComments = DatabaseLogic.getCommentForIssue(issue);
+    DefaultListModel<String> model = new DefaultListModel<>();
+    for (com.mycompany.bettertown.user.Comment c : loadedComments) {
+        model.addElement(c.getTitle());
+    }
+    CommentsList.setModel(model);
+    System.out.println("Loaded comments: " + loadedComments.size());
+}
+
     
     public void setLoggedInUser(ProfileData user) {
         this.loggedUser = user;

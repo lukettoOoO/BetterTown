@@ -4,10 +4,19 @@
  */
 package com.mycompany.bettertown.login;
 
+import com.mycompany.bettertown.BlockedUsers;
 import com.mycompany.bettertown.admin.MainTabsAdmin;
+import com.mycompany.bettertown.login.DatabaseLogic;
+import com.mycompany.bettertown.login.ProfileData;
 import com.mycompany.bettertown.user.MainTabsUser;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import org.mindrot.jbcrypt.BCrypt;
@@ -29,10 +38,12 @@ public class LoginFrame extends javax.swing.JFrame {
     ImageIcon logoIcon;
     private int roleToLog; //0 - none, 1 - user, 2 - admin
     private ProfileData currentProfileData;
+    private int checkBlock=0;
     public LoginFrame() {
         initComponents();
         
-        this.logoIcon = new ImageIcon("logo.png");
+        //this.logoIcon = new ImageIcon("logo.png");
+        this.logoIcon = new ImageIcon(getClass().getResource("/logo.png"));
         logoLabel.setIcon(logoIcon);
         setLocationRelativeTo(null);
         
@@ -244,9 +255,10 @@ public class LoginFrame extends javax.swing.JFrame {
         //login credentials verifiecation with database (use methods created in DatabaseLogic file)
          //use errorLabel.setText("") in order to display error messages in the frame
         //verify password from database with hashed (BCrypt) password!!!
-        if (error == 0) {
-        try (Connection conn = DatabaseLogic.getConnection()) {
-            String sql = "SELECT name, city, password, status FROM users WHERE email = ? AND status = ?";
+        if(error == 0)
+        {
+            try (Connection conn = DatabaseLogic.getConnection()) {
+            String sql = "SELECT id,name, city, password, status FROM users WHERE email = ? AND status = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, email);
             String statusToFind = (roleToLog == 1) ? "user" : "admin";
@@ -254,31 +266,63 @@ public class LoginFrame extends javax.swing.JFrame {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                int idFromDb=rs.getInt("id");
                 String nameFromDb = rs.getString("name");
                 String cityFromDb = rs.getString("city");
                 String hashedPasswordFromDb = rs.getString("password");
                 String statusFromDb = rs.getString("status");
-
+                
                 // Verifică dacă parola introdusă se potrivește cu hash-ul din baza de date
                 if (BCrypt.checkpw(password, hashedPasswordFromDb)) {
                     currentProfileData = new ProfileData(nameFromDb, cityFromDb, "", email, statusFromDb); // Nu stoca parola nehashuită
-
-                    this.hide();
+                    currentProfileData.setId(idFromDb);
+                    List<BlockedUsers> blockedUsers=new ArrayList<>();
+                    blockedUsers=DatabaseLogic.getBlockedUsers();
+                    for(BlockedUsers b : blockedUsers)
+                    {
+                        if(currentProfileData.getId()==b.getUserId())
+                            checkBlock=1;
+                    }
+                    
+                    //this.hide();
                     if (roleToLog == 1 && statusFromDb.equals("user")) {
-                        MainTabsUser mainTabsUserObj = new MainTabsUser();
-                        mainTabsUserObj.setCurrentUserData(currentProfileData);
-                        mainTabsUserObj.show();
-                    } else if (roleToLog == 2 && statusFromDb.equals("admin")) {
-                        MainTabsAdmin mainTabsAdminObj = new MainTabsAdmin();
-                        mainTabsAdminObj.setCurrentAdminData(currentProfileData);
-                        mainTabsAdminObj.show();
+                        if(checkBlock==1)
+                        {
+                            errorLabel.setText("This account has been blocked!");
+                        }
+                        else
+                        {
+                            System.out.println("La login: "+currentProfileData.getId());
+                            MainTabsUser mainTabsUserObj = new MainTabsUser();
+                            mainTabsUserObj.initAlerts(currentProfileData);
+                            mainTabsUserObj.initSolvedIssues();
+                            mainTabsUserObj.setCurrentUserData(currentProfileData);
+                            this.hide();
+                            mainTabsUserObj.show();
+                        }  
+                          
+                    } else if (roleToLog == 2) {
+                        if(checkBlock==1)
+                        {
+                            errorLabel.setText("This account has been blocked!");
+                        }
+                        else
+                        {
+                            System.out.println(currentProfileData.getName());
+                            MainTabsAdmin mainTabsAdminObj = new MainTabsAdmin();
+                            mainTabsAdminObj.setCurrentAdminData(currentProfileData);
+                            mainTabsAdminObj.initAlerts(currentProfileData);
+                            this.hide();
+                            mainTabsAdminObj.show();
+                        }
+                        
                     } else {
                         errorLabel.setText("Invalid role for this user!");
                     }
                 } else {
                     errorLabel.setText("Incorrect password!");
                 }
-            } else {
+                            } else {
                 errorLabel.setText("User not found with this email and role!");
             }
 
@@ -287,6 +331,7 @@ public class LoginFrame extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+        
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void userRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userRadioButtonActionPerformed

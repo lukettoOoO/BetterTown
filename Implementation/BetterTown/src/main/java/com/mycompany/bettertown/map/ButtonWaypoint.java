@@ -19,7 +19,7 @@ public class ButtonWaypoint extends JButton {
     public ButtonWaypoint()
     {
         setContentAreaFilled(false);
-        setIcon(new ImageIcon("pinUnresolved.png"));
+        setIcon(new ImageIcon(getClass().getResource("/pinUnresolved.png")));
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         setSize(new Dimension(24, 24));
         setBorder(new EmptyBorder(0, 0, 0, 0));

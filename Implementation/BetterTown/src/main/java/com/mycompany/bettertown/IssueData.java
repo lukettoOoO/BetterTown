@@ -1,16 +1,19 @@
 package com.mycompany.bettertown;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+import javax.swing.ImageIcon;
 
 public class IssueData
 {
+    private int id;
     private String title;
     private String description;
-    private String photo;
+    private ImageIcon photo;
     private int priority;
     private String city;
     private String address;
-    private Date date;
+    private LocalDateTime date;
     private String username;
     private String status;
     
@@ -18,7 +21,8 @@ public class IssueData
     private double longitude;
 
     
-    public IssueData(String title, String description, String photo, int priority, String city, String address, Date date, String username, String status, double latitude, double longitude) {
+    public IssueData(String title, String description, ImageIcon photo, int priority, String city, String address, LocalDateTime date, String username, String status, double latitude, double longitude) {
+        
         this.title = title;
         this.description = description;
         this.photo = photo;
@@ -37,6 +41,11 @@ public class IssueData
         //folosit pentru crearea unui obiect in database
     }
 
+    //Adaugat get si set pentru id (primary key in tabel)
+    public int getId() {
+    return id;
+    }
+    
     public String getTitle() {
         return title;
     }
@@ -45,7 +54,7 @@ public class IssueData
         return description;
     }
 
-    public String getPhoto() {
+    public ImageIcon getPhoto() {
         return photo;
     }
 
@@ -61,7 +70,7 @@ public class IssueData
         return address;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
@@ -81,6 +90,9 @@ public class IssueData
         return latitude;
     }
 
+    public void setId(int id) {
+    this.id = id;
+}
     
     public void setTitle(String title) {
         this.title = title;
@@ -90,7 +102,7 @@ public class IssueData
         this.description = description;
     }
 
-    public void setPhoto(String photo) {
+    public void setPhoto(ImageIcon photo) {
         this.photo = photo;
     }
 
@@ -106,7 +118,7 @@ public class IssueData
         this.address = address;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

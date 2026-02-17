@@ -26,12 +26,33 @@ import javax.swing.ImageIcon;
 import java.time.LocalDateTime;
 
 public class DatabaseLogic {
-    private static final String URL = "jdbc:mysql://localhost:3306/BetterTown";
-    private static final String USER = "root";
-    private static final String PASSWORD = "bia142004";
+    private static String url;
+    private static String user;
+    private static String password;
+
+    static {
+        try (java.io.InputStream input = DatabaseLogic.class.getClassLoader().getResourceAsStream("db.properties")) {
+            java.util.Properties prop = new java.util.Properties();
+            if (input == null) {
+                System.out.println("Sorry, unable to find db.properties");
+                // Fallback to defaults if file not found, though this should be avoided
+                url = "jdbc:mysql://localhost:3306/BetterTown";
+                user = "root";
+                password = ""; 
+            } else {
+                prop.load(input);
+                url = prop.getProperty("db.url");
+                user = prop.getProperty("db.user");
+                password = prop.getProperty("db.password");
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+        // System.out.println("Connecting to database with user: " + user); // Debugging
+        return DriverManager.getConnection(url, user, password);
     }
 //this is for register with database
   public static ProfileData getUserByEmailAndStatus(Connection conn, String email, String status) throws SQLException {
@@ -49,7 +70,7 @@ public class DatabaseLogic {
             email,
             rs.getString("status")
         );
-        user.setId(rs.getInt("id")); // Ai nevoie de acest setter în clasă
+        user.setId(rs.getInt("id"));
         return user;
     }
     return null;
@@ -108,18 +129,17 @@ public class DatabaseLogic {
             data.setTitle(rs.getString("title"));
             data.setDescription(rs.getString("description"));
             //data.setPhoto(rs.getString("photo"));
-            byte[] photoBytes = rs.getBytes("image_data"); // Citim tabloul de octeți din coloana 'photo'
+            byte[] photoBytes = rs.getBytes("image_data");
                 if (photoBytes != null) {
                     try {
                         ImageIcon retrievedIcon = byteArrayToImageIcon(photoBytes);
-                        data.setPhoto(retrievedIcon); // Setează ImageIcon-ul în obiectul IssueData
+                        data.setPhoto(retrievedIcon);
                     } catch (IOException e) {
                         System.err.println("Eroare la conversia datelor imagine în ImageIcon: " + e.getMessage());
-                        // Poți alege să setezi imaginea ca null sau să gestionezi eroarea diferit
                         data.setPhoto(null);
                     }
                 } else {
-                    data.setPhoto(null); // Setează imaginea ca null dacă nu există date foto
+                    data.setPhoto(null);
                 }
             data.setPriority(rs.getInt("priority"));
             data.setCity(rs.getString("city"));

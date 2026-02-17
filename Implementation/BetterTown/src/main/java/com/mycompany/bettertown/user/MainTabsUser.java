@@ -106,8 +106,20 @@ public class MainTabsUser extends javax.swing.JFrame {
     {
         //map init:
         mapViewer = new JXMapViewer();
-        TileFactoryInfo info = new OSMTileFactoryInfo();
+        
+        TileFactoryInfo info = new TileFactoryInfo(0, 19, 19,
+                256, true, true, 
+                "https://tile.openstreetmap.org",
+                "x", "y", "z") {
+            @Override
+            public String getTileUrl(int x, int y, int zoom) {
+                zoom = getTotalMapZoom() - zoom;
+                return this.baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
+            }
+        };
+        
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+        tileFactory.setUserAgent("BetterTown/1.0");
         mapViewer.setTileFactory(tileFactory);
         tileFactory.setThreadPoolSize(8);
         GeoPosition timisoara = new GeoPosition(45.75, 21.23);
@@ -294,23 +306,50 @@ public class MainTabsUser extends javax.swing.JFrame {
         }).start();
     }
     
-    public String getLocation(GeoPosition pos) throws JSONException
+    public String getLocation(GeoPosition pos) 
     {
-        String body = HttpRequest.get("https://nominatim.openstreetmap.org/reverse?lat=" + pos.getLatitude() + "&lon=" + pos.getLongitude() + "&format=json").body();
-        JSONObject json = new JSONObject(body);
-        return json.getString("display_name");
+        try {
+            String url = "https://nominatim.openstreetmap.org/reverse?lat=" + pos.getLatitude() + "&lon=" + pos.getLongitude() + "&format=json";
+            String body = HttpRequest.get(url).userAgent("BetterTown/1.0").body();
+            
+            if (body == null || body.trim().isEmpty() || !body.trim().startsWith("{")) {
+                 return "Unknown Location";
+            }
+
+            JSONObject json = new JSONObject(body);
+            return json.optString("display_name", "Unknown Location");
+        } catch (Exception e) {
+            System.err.println("Error getting location: " + e.getMessage());
+            return "Unknown Location";
+        }
     }
     
-  public String getCity(GeoPosition pos) throws JSONException 
+  public String getCity(GeoPosition pos) 
   {
-    String body = HttpRequest.get("https://nominatim.openstreetmap.org/reverse?lat=" + pos.getLatitude() + "&lon=" + pos.getLongitude() + "&format=json").body();
-    JSONObject json = new JSONObject(body);
-    JSONObject address = json.getJSONObject("address");
-    String city = address.optString("city"); // Use optString to handle cases where "city" might be missing
-    if (city == null || city.isEmpty()) {
-        city = address.optString("village"); // Try to get village if city is not found
-    }
-    return city;
+      try {
+        String url = "https://nominatim.openstreetmap.org/reverse?lat=" + pos.getLatitude() + "&lon=" + pos.getLongitude() + "&format=json";
+        String body = HttpRequest.get(url).userAgent("BetterTown/1.0").body();
+
+        if (body == null || body.trim().isEmpty() || !body.trim().startsWith("{")) {
+             return "Unknown City";
+        }
+
+        JSONObject json = new JSONObject(body);
+        JSONObject address = json.optJSONObject("address");
+        if (address == null) return "Unknown City";
+
+        String city = address.optString("city"); 
+        if (city == null || city.isEmpty()) {
+            city = address.optString("village"); 
+        }
+        if (city == null || city.isEmpty()) {
+            city = address.optString("town"); 
+        }
+        return city != null && !city.isEmpty() ? city : "Unknown City";
+      } catch (Exception e) {
+          System.err.println("Error getting city: " + e.getMessage());
+          return "Unknown City";
+      }
 }
   
     public void setCurrentUserData(ProfileData profileData)
@@ -1165,7 +1204,13 @@ public class MainTabsUser extends javax.swing.JFrame {
 
     private void alertsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alertsButtonActionPerformed
         // TODO add your handling code here:
+        if (currentUserData != null) {
+            initAlerts(currentUserData);
+        }
+        
+        System.out.println("Alert button performed");
         tabbedPane.setSelectedIndex(2);
+        
     }//GEN-LAST:event_alertsButtonActionPerformed
 
     private void feedbackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_feedbackButtonActionPerformed

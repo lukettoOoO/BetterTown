@@ -56,7 +56,7 @@
   </dependencies>
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
-    <exec.mainClass>com.mycompany.bettertown.BetterTown</exec.mainClass>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <exec.mainClass>com.mycompany.bettertown.BetterTown</exec.mainClass>
   </properties>
 </project>

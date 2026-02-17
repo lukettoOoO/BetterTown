@@ -1,0 +1,8 @@
+target/
+.DS_Store
+*.class
+*.log
+.idea/
+*.iml
+src/main/resources/db.properties
+src/main/java/com/mycompany/bettertown/GenerateHash.java

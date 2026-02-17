@@ -1,81 +1,101 @@
-# BetterTown
+# BetterTown 🏙️
 
-BetterTown is a Java Swing application designed to help citizens and administrators manage town issues, alerts, and feedback. It features distinct interfaces for Users and Admins, integrated mapping with OpenStreetMap, and a robust issue reporting system.
+> **A smart city management platform empowering citizens and administrators to build better communities.**
 
-## Features
+BetterTown is a robust Java Swing application that streamlines the process of reporting, tracking, and resolving urban issues. Designed with a focus on usability and real-time feedback, it serves as a bridge between city officials and the community.
 
-### User Features
-- **Report Issues**: Submit issues with descriptions, photos, and location coordinates via the map.
-- **View Map**: Browse reported issues on an interactive map.
-- **Alerts**: Receive real-time alerts from administrators about issue status changes.
-- **Feed**: View a list of all reported issues.
+---
 
-### Admin Features
-- **Manage Issues**: View, update status (In Progress, Resolved), and delete reported issues.
-- **Map Overview**: See all issues on the map with their current status.
-- **Send Alerts**: Broadcast alerts to users regarding city updates or specific issues.
-- **User Management**: View user accounts.
+## 👥 The Team
 
-## Prerequisites
+This project was collaboratively developed by:
 
-- **Java**: JDK 21 or higher.
-- **Maven**: For building the project.
-- **MySQL**: For the database backend.
+*   **Mihut Luca-Adrian**
+*   **Grovu Bianca-Delia**
 
-## Setup
+---
 
-### 1. Database Setup
-1.  Ensure MySQL is running.
-2.  Create a database named `BetterTown`.
-3.  Import the schema and default data using the provided `database.sql` script:
+## 🛠️ Technologies Used
 
+This project handles complex logic including geolocation, database management, and secure authentication, built with the following stack:
+
+*   **Core Language**: Java 21 (JDK 21)
+*   **GUI Framework**: Java Swing (Custom UI components and layout management)
+*   **Build Tool**: Apache Maven
+*   **Database**: MySQL (Complex schema with relational data integrity)
+*   **Mapping & Geolocation**:
+    *   **JXMapViewer2**: Interactive map visualization with custom tile factories.
+    *   **OpenStreetMap**: Map tile data source (HTTPS secured).
+    *   **Nominatim API**: Reverse geocoding for converting coordinates to human-readable addresses.
+*   **Security**:
+    *   **jBCrypt**: Industrial-grade password hashing and salt generation.
+*   **Data Parsing**: `org.json` for handling external API responses.
+
+---
+
+## ✨ Key Features
+
+### 👤 For Citizens (User Role)
+*   **Interactive Map Reporting**: Simply click on the map to pinpoint an issue location. The app automatically fetches the address and city.
+*   **Visual Evidence**: Attach photos to reports for clarity.
+*   **Real-time Feed**: Browse a feed of reported issues in the community.
+*   **Live Alerts**: Receive notifications from administrators when issue statuses change.
+
+### 🛡️ For Administrators (Admin Role)
+*   **Issue Management Dashboard**: Track reported issues, view details, and prioritize fixes.
+*   **Status Workflow**: Update issues from "Reported" to "In Progress" or "Resolved".
+*   **Global Alerts**: Broadcast urgent alerts to all users.
+*   **User Management**: Monitor user activity and manage accounts.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+*   Java Development Kit (JDK) 21+
+*   Maven
+*   MySQL Server
+
+### Installation & Setup
+
+1.  **Clone the Repository**
     ```bash
-    mysql -u root -p < database.sql
+    git clone https://github.com/lukettoOoO/BetterTown.git
+    cd BetterTown
     ```
 
-### 2. Application Configuration
-1.  Navigate to `src/main/resources/`.
-2.  Create or edit `db.properties` with your database credentials:
+2.  **Database Configuration**
+    *   Create a MySQL database named `BetterTown`.
+    *   Run the provided SQL script to set up the schema and default data:
+        ```bash
+        mysql -u root -p < database.sql
+        ```
+    *   Configure your database connection in `src/main/resources/db.properties`:
+        ```properties
+        db.url=jdbc:mysql://localhost:3306/BetterTown
+        db.user=YOUR_USERNAME
+        db.password=YOUR_PASSWORD
+        ```
 
-    ```properties
-    db.url=jdbc:mysql://localhost:3306/BetterTown
-    db.user=your_username
-    db.password=your_password
-    ```
-
-    *Note: The default `db.properties` is set to `root` with no password, common for some local development environments.*
-
-## Running the Application
-
-### Automatic (Recommended)
-Use the provided shell script to build and run the application automatically:
-
-```bash
-./run.sh
-```
-
-### Manual
-1.  **Build**:
+3.  **Run the Application**
+    We have provided a convenience script to build and launch the app in one go:
     ```bash
-    mvn clean package -DskipTests
+    ./run.sh
     ```
-2.  **Run**:
-    ```bash
-    java -jar target/BetterTown-1.0-SNAPSHOT-exec.jar
-    ```
+    *(Alternatively, use `mvn clean package` and run the generated JAR in `target/`)*
 
-## Default Credentials
+### Default Login Credentials
 
-### Admin Login
-- **Email**: `admin@bettertown.com`
-- **Password**: `admin123`
-- **Role**: Select **Admin**
+| Role | Email | Password |
+|------|-------|----------|
+| **Admin** | `admin@bettertown.com` | `admin123` |
+| **User** | *(Register a new account via the GUI)* | *(User defined)* |
 
-### User Login
-You can register a new user via the "Register" button on the login screen.
+---
 
-## Troubleshooting
+## 📸 Project Highlights
+*   **Security First**: All passwords are securely hashed using BCrypt before storage.
+*   **Robust Error Handling**: Network requests to geocoding APIs handle timeouts and errors gracefully to prevent crashes.
+*   **External Configuration**: Database credentials are decoupled from the source code for security and portability.
 
-- **Map Tiles Not Loading**: Ensure you have an active internet connection. The application uses HTTPS to fetch tiles from OpenStreetMap.
-- **Database Connection Error**: Verify your MySQL server is running and the credentials in `src/main/resources/db.properties` are correct.
-- **Geolocation Errors**: If the map click doesn't fetch an address, check your internet connection. the application uses the Nominatim API which requires internet access.
+
